@@ -7,3 +7,7 @@
 //
 
 import Foundation
+
+protocol CustomCellTypeModel {
+    var model: DetailHotelViewModel.CellType? {set get}
+}

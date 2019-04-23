@@ -7,3 +7,8 @@
 //
 
 import Foundation
+
+struct ErrorAlert {
+    let title: String
+    let message: String
+}

@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Address: Decodable {
+struct MDAddress: Decodable {
     let street: String
     let houseIndex: String
 }

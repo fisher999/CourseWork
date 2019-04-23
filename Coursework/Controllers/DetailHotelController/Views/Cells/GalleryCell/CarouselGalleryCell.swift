@@ -8,8 +8,24 @@
 
 import UIKit
 
-class CarouselGalleryCell: UITableViewCell {
+class CarouselGalleryCell: UITableViewCell, CustomCellTypeModel, NibLoadableView, ReusableView {
+    //MARK: Outlets
+    @IBOutlet weak var galleryView: GalleryView!
+    
+    //MARK: Properties
+    var model: DetailHotelViewModel.CellType? {
+        didSet {
+            guard let cellType = self.model else {return}
+            switch cellType {
+            case .carouselGalleryCell(let images):
+                galleryView.images = images
+            default:
+                return
+            }
+        }
+    }
 
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

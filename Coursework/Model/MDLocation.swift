@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Location: Decodable {
+struct MDLocation: Decodable {
     let country: String
     let city: String
     let district: String

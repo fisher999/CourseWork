@@ -8,10 +8,15 @@
 
 import Foundation
 
-struct Hotel: Decodable {
+struct MDHotel: Decodable {
+    let id: Int
+    let country: String
+    let street: String
+    let city: String
+    let house_index: String
     let name: String
     let price: Float
     let rating: Float
-    let address: Address
-    let location: Location
+    let image_url: String
+    let description: String?
 }

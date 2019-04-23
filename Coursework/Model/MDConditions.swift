@@ -7,3 +7,14 @@
 //
 
 import Foundation
+
+struct MDConditions: Decodable {
+    let wifi: Bool
+    let pool: Bool
+    let spa: Bool
+    let allowedPets: Bool
+    let conditioner: Bool
+    let restaraunt: Bool
+    let bar: Bool
+    let gym: Bool
+}

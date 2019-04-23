@@ -7,3 +7,13 @@
 //
 
 import Foundation
+import Moya
+import Alamofire
+import ReactiveSwift
+
+public extension MoyaProvider {
+    public func request(_ targetType: Target) -> SignalProducer<Response, MoyaError> {
+        
+        return reactive.request(targetType).observe(on: UIScheduler()).filterSuccessfulStatusCodes()
+    }
+}

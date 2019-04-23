@@ -15,7 +15,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        self.window = UIWindow.init(frame: UIScreen.main.bounds)
+        
+        if !UserManager.shared.userIsAuth {
+            let viewModel = RegisterViewModel()
+            let vc = RegisterViewController(viewModel: viewModel)
+            self.window?.rootViewController = vc
+        }
+        else {
+            let viewModel = HotelsListViewModel()
+            let hotelListVC = HotelsListController(viewModel: viewModel)
+            let navVC = UINavigationController(rootViewController: hotelListVC)
+            self.window?.rootViewController = navVC
+        }
+        
+        self.window?.makeKeyAndVisible()
+        
         return true
     }
 

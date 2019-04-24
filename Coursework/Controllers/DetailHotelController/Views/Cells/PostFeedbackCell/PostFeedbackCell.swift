@@ -23,18 +23,41 @@ class PostFeedbackCell: UITableViewCell, CustomCellTypeModel, NibLoadableView, R
     var firstBeginEditing: Bool = true
     
     //MARK: Reactive
-    var postButtonTapped: Signal<(Int, String), DetailHotelViewModel.DetailHotelError>
-    fileprivate var postButtonTappedObserver: Signal<(Int, String), DetailHotelViewModel.DetailHotelError>.Observer
+    var feedbackSignal: Signal<(Int, String), NoError>
+    fileprivate var feedbackSignalObserver: Signal<(Int, String), NoError>.Observer
     
+    var alertSignal: Signal<ErrorAlert,NoError>
+    fileprivate var alertSignalObserver: Signal<ErrorAlert,NoError>.Observer
+    
+    private var sendFeedbackAction: Action<(Int?, String?, Bool), (Int,String), DetailHotelViewModel.DetailHotelError>
+    fileprivate let postButtonSignalProducerGenerator: (Int?, String?, Bool) -> SignalProducer<(Int, String), DetailHotelViewModel.DetailHotelError>  = { rating, comment, isFirstBeginEditing  in
+        return SignalProducer<(Int, String), DetailHotelViewModel.DetailHotelError> { (observer, lifetime) in
+            guard let currentRating = rating else {
+                observer.send(error: .validateError("Вы не указали оценку", "Пожалуйста, выберите оценку"))
+                observer.sendCompleted()
+                return
+            }
+            guard let comment = comment, !comment.isEmpty, !isFirstBeginEditing else {
+                observer.send(error: .validateError("Вы не написали отзыв", "Пожалуйста, напишите отзыв"))
+                observer.sendCompleted()
+                return
+            }
+            observer.send(value: (currentRating, comment))
+            observer.sendCompleted()
+        }
+    }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        (postButtonTapped, postButtonTappedObserver) = Signal.pipe()
+        sendFeedbackAction = Action<(Int?, String?, Bool), (Int,String), DetailHotelViewModel.DetailHotelError>.init(execute: postButtonSignalProducerGenerator)
+        (feedbackSignal, feedbackSignalObserver) = Signal.pipe()
+        (alertSignal, alertSignalObserver) = Signal.pipe()
         super.init(style: style, reuseIdentifier: reuseIdentifier)
     }
     
     required init?(coder aDecoder: NSCoder) {
-        (postButtonTapped, postButtonTappedObserver) = Signal.pipe()
-        
+        sendFeedbackAction = Action<(Int?, String?, Bool), (Int,String), DetailHotelViewModel.DetailHotelError>.init(execute: postButtonSignalProducerGenerator)
+        (feedbackSignal, feedbackSignalObserver) = Signal.pipe()
+        (alertSignal, alertSignalObserver) = Signal.pipe()
         super.init(coder: aDecoder)
     }
     
@@ -100,17 +123,17 @@ extension PostFeedbackCell {
     }
     
     @objc func postButtonTapped(_ sender: UIButton) {
-        guard let currentRating = self.currentRating else {
-            self.postButtonTappedObserver.send(error: .validateError("Вы не указали оценку", "Пожалуйста, выберите оценку"))
-            
-            return
+        self.sendFeedbackAction.errors.observeValues { (error) in
+            switch error {
+            case .validateError(let title, let message):
+                self.alertSignalObserver.send(value: ErrorAlert.init(title: title, message: message))
+            }
         }
-        guard let comment = self.feedbackTextView.text, !comment.isEmpty, !firstBeginEditing else {
-            self.postButtonTappedObserver.send(error: .validateError("Вы не написали отзыв", "Пожалуйста, напишите отзыв"))
-
-            return
+        self.sendFeedbackAction.apply((self.currentRating, self.feedbackTextView.text, self.firstBeginEditing)).startWithResult {(result) in
+            if let value = result.value {
+                self.feedbackSignalObserver.send(value: value)
+            }
         }
-        self.postButtonTappedObserver.send(value: (currentRating, comment))
     }
 }
 

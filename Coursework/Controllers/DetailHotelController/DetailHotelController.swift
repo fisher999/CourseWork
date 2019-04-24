@@ -121,14 +121,12 @@ extension DetailHotelController: UITableViewDataSource {
             case .postFeedbackCell:
                 let cell: PostFeedbackCell = tableView.dequeueReusableCell(for: indexPath)
                 self.inputs.append(cell.feedbackTextView)
-//                viewModel.postFeedback <~ cell.postButtonSignalProducer.materialize().map({ (event) -> (Int, String)? in
-//                    return event.value
-//                }).filterMap({ (string) -> (Int, String)? in
-//                    return string
-//                })
-//                self.alertBinding <~ cell.postButtonSignalProducer.materialize().map({ (event) -> ErrorAlert? in
+                //viewModel.postFeedback <~ cell.sendFeedbackProducer
+                viewModel.postFeedback <~ cell.feedbackSignal
+                self.alertBinding <~ cell.alertSignal
+//                self.alertBinding <~ cell.sendFeedbackProducer.materialize().map({ (event) -> ErrorAlert? in
 //                    guard let error = event.error else {return nil}
-//                    switch error{
+//                    switch error {
 //                    case .validateError(let title, let message):
 //                        return ErrorAlert.init(title: title, message: message)
 //                    }

@@ -16,7 +16,7 @@ struct MDHotel: Decodable {
     let house_index: String
     let name: String
     let price: Float
-    let rating: Float
+    let rating: Float?
     let image_url: String
     let description: String?
 }

@@ -35,6 +35,8 @@
 		578555512268B5520089220E /* MDUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578555502268B5520089220E /* MDUser.swift */; };
 		578555552268D5BF0089220E /* ApartmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578555532268D5BF0089220E /* ApartmentCell.swift */; };
 		578555562268D5BF0089220E /* ApartmentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 578555542268D5BF0089220E /* ApartmentCell.xib */; };
+		579CE8802271F70800AF7062 /* Float+Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = 579CE87F2271F70800AF7062 /* Float+Round.swift */; };
+		579CE883227207C200AF7062 /* MDResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 579CE882227207C200AF7062 /* MDResponse.swift */; };
 		57AF8C122259053E000616EA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57AF8C112259053E000616EA /* AppDelegate.swift */; };
 		57AF8C1922590540000616EA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 57AF8C1822590540000616EA /* Assets.xcassets */; };
 		57AF8C1C22590540000616EA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 57AF8C1A22590540000616EA /* LaunchScreen.storyboard */; };
@@ -103,6 +105,8 @@
 		578555502268B5520089220E /* MDUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDUser.swift; sourceTree = "<group>"; };
 		578555532268D5BF0089220E /* ApartmentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApartmentCell.swift; sourceTree = "<group>"; };
 		578555542268D5BF0089220E /* ApartmentCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ApartmentCell.xib; sourceTree = "<group>"; };
+		579CE87F2271F70800AF7062 /* Float+Round.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Float+Round.swift"; sourceTree = "<group>"; };
+		579CE882227207C200AF7062 /* MDResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDResponse.swift; sourceTree = "<group>"; };
 		57AF8C0E2259053E000616EA /* Coursework.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Coursework.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		57AF8C112259053E000616EA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		57AF8C1822590540000616EA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -255,6 +259,14 @@
 			path = ApartmentCell;
 			sourceTree = "<group>";
 		};
+		579CE8812271FE4000AF7062 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				57AF8C1822590540000616EA /* Assets.xcassets */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
 		57AF8C052259053E000616EA = {
 			isa = PBXGroup;
 			children = (
@@ -276,7 +288,7 @@
 		57AF8C102259053E000616EA /* Coursework */ = {
 			isa = PBXGroup;
 			children = (
-				57AF8C1822590540000616EA /* Assets.xcassets */,
+				579CE8812271FE4000AF7062 /* Images */,
 				57AF8C112259053E000616EA /* AppDelegate.swift */,
 				57AF8C1A22590540000616EA /* LaunchScreen.storyboard */,
 				57AF8C1D22590540000616EA /* Info.plist */,
@@ -324,6 +336,7 @@
 				57D4B7732264EEEB000C8594 /* MDConditions.swift */,
 				5785554E2268B41D0089220E /* MDFeedback.swift */,
 				578555502268B5520089220E /* MDUser.swift */,
+				579CE882227207C200AF7062 /* MDResponse.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -344,6 +357,7 @@
 				57E7CC2D22697795005ECE40 /* Date+String.swift */,
 				57308EBE226C70B700707E9A /* UIView+Shadow.swift */,
 				57308EC0226C79C700707E9A /* UIButton+State.swift */,
+				579CE87F2271F70800AF7062 /* Float+Round.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -652,6 +666,8 @@
 				57AF8C38225911EE000616EA /* UIColor + RGB.swift in Sources */,
 				57308EB2226C490100707E9A /* GalleryCell.swift in Sources */,
 				57FBBE95226AEED300218F8E /* DefaultAlamofireManager.swift in Sources */,
+				579CE8802271F70800AF7062 /* Float+Round.swift in Sources */,
+				579CE883227207C200AF7062 /* MDResponse.swift in Sources */,
 				57AF8C4122592646000616EA /* UIViewController+Alert.swift in Sources */,
 				57D4B7702264E839000C8594 /* MDApartment.swift in Sources */,
 				57308EBF226C70B700707E9A /* UIView+Shadow.swift in Sources */,

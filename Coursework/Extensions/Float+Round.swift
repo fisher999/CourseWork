@@ -7,3 +7,10 @@
 //
 
 import Foundation
+
+extension Double {
+    public func floorTo(precision: Int) -> Double {
+        let divisor = pow(10.0, Double(precision))
+        return floor(self * divisor) / divisor
+    }
+}

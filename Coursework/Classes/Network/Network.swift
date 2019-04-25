@@ -17,6 +17,7 @@ public enum Network {
     case apartments(Int)
     case getComments(Int)
     case postComment(Int, MDFeedback)
+    case deleteComment(Int, MDFeedback)
 }
 
 extension Network: TargetType {
@@ -32,7 +33,7 @@ extension Network: TargetType {
             return "/hotels/"
         case .apartments(let id):
             return "/hotels/\(id)/apartments"
-        case .getComments(let id), .postComment(let id, _):
+        case .getComments(let id), .postComment(let id, _), .deleteComment(let id, _):
             return "/hotels/\(id)/feedbacks"
         }
     }
@@ -43,6 +44,8 @@ extension Network: TargetType {
             return .post
         case .hotelist, .apartments, .getComments:
             return .get
+        case .deleteComment:
+            return .delete
         }
     }
     
@@ -56,8 +59,9 @@ extension Network: TargetType {
             return .requestJSONEncodable(user)
         case .hotelist, .apartments, .getComments:
             return .requestPlain
-        case .postComment(_, let feedback):
+        case .postComment(_, let feedback), .deleteComment(_, let feedback):
             return .requestJSONEncodable(feedback)
+        
         }
     }
     

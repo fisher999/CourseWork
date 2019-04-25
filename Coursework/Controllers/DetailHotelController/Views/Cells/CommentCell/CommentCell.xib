@@ -57,7 +57,7 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Mx-Iy-cuX">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Mx-Iy-cuX">
                         <rect key="frame" x="248" y="76" width="86" height="13"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="13" id="8BS-Tc-SUt"/>
@@ -67,11 +67,21 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1mq-3a-0dO">
+                        <rect key="frame" x="309" y="11" width="25" height="25"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="25" id="XAl-tK-fGX"/>
+                            <constraint firstAttribute="height" constant="25" id="m2q-qi-Hk1"/>
+                        </constraints>
+                        <state key="normal" image="close-circular-button-of-a-cross"/>
+                    </button>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="bottom" secondItem="IfN-7R-0aZ" secondAttribute="bottom" constant="10.5" id="A0p-V2-27A"/>
                     <constraint firstItem="Y8i-lF-dKT" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="Am5-Ni-mf4"/>
                     <constraint firstAttribute="bottom" secondItem="9Mx-Iy-cuX" secondAttribute="bottom" constant="10.5" id="Dav-KS-MQK"/>
+                    <constraint firstAttribute="trailing" secondItem="1mq-3a-0dO" secondAttribute="trailing" constant="16" id="EGa-Ai-Tl3"/>
+                    <constraint firstItem="1mq-3a-0dO" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="11" id="H3p-tH-pTj"/>
                     <constraint firstItem="R2A-pf-WGu" firstAttribute="top" secondItem="Y8i-lF-dKT" secondAttribute="bottom" constant="8" id="MWH-KT-pOl"/>
                     <constraint firstItem="R2A-pf-WGu" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="Uww-vs-Wb8"/>
                     <constraint firstItem="9Mx-Iy-cuX" firstAttribute="leading" secondItem="IfN-7R-0aZ" secondAttribute="trailing" constant="8" id="XVa-lo-MKP"/>
@@ -87,6 +97,7 @@
             <connections>
                 <outlet property="cimmentLabel" destination="R2A-pf-WGu" id="izR-96-eGc"/>
                 <outlet property="dateLabel" destination="9Mx-Iy-cuX" id="cb9-fH-hWX"/>
+                <outlet property="deleteFeedbackButton" destination="1mq-3a-0dO" id="hlg-aD-I80"/>
                 <outlet property="ratingLabel" destination="Ha0-oN-ibB" id="mDc-AD-SdD"/>
                 <outlet property="ratingView" destination="Y8i-lF-dKT" id="0Ad-3L-Nas"/>
                 <outlet property="usernameLabel" destination="IfN-7R-0aZ" id="DCB-17-iqJ"/>
@@ -94,4 +105,7 @@
             <point key="canvasLocation" x="76.799999999999997" y="73.763118440779621"/>
         </tableViewCell>
     </objects>
+    <resources>
+        <image name="close-circular-button-of-a-cross" width="48" height="48"/>
+    </resources>
 </document>

@@ -7,13 +7,17 @@
 //
 
 import UIKit
+import ReactiveSwift
+import Result
 
 class CommentCell: UITableViewCell, CustomCellTypeModel, ReusableView, NibLoadableView {
     struct Model{
+        let id: Int
         let date: String
         let userName: String
         let rating: Float
         let comment: String
+        let isMyComment: Bool
     }
     
     //MARK: Outlets
@@ -22,20 +26,35 @@ class CommentCell: UITableViewCell, CustomCellTypeModel, ReusableView, NibLoadab
     @IBOutlet weak var cimmentLabel: UILabel!
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
-    
+    @IBOutlet weak var deleteFeedbackButton: UIButton!
     
     //MARK: Properties
     var model: DetailHotelViewModel.CellType? {
         didSet {
             guard let cellType = model else {return}
             switch cellType {
-            case .commentCell(let date, let username, let rating, let comment):
-                let model = Model(date: date, userName: username,  rating: rating, comment: comment)
+            case .commentCell(let feedback):
+                guard let id = feedback.id, let date = feedback.date, let username = feedback.user?.username, let isMyComment = feedback.user?.isMyComment else {return}
+                let model = Model(id: id, date: date, userName: username,  rating: feedback.rating, comment: feedback.comment, isMyComment: isMyComment)
                 setup(model: model)
             default:
                 return
             }
         }
+    }
+    
+    //MARK: Reactive
+    var deleteFeedbackAtIdSignal: Signal<Int, NoError>
+    fileprivate var deleteFeedbackAtIdObserver: Signal<Int, NoError>.Observer
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        (deleteFeedbackAtIdSignal, deleteFeedbackAtIdObserver) = Signal.pipe()
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        (deleteFeedbackAtIdSignal, deleteFeedbackAtIdObserver) = Signal.pipe()
+        super.init(coder: aDecoder)
     }
     
     override func awakeFromNib() {
@@ -50,6 +69,7 @@ class CommentCell: UITableViewCell, CustomCellTypeModel, ReusableView, NibLoadab
     }
 }
 
+//MARK: Setup
 extension CommentCell {
     func setup(model: Model) {
         switch model.rating {
@@ -79,5 +99,22 @@ extension CommentCell {
         self.dateLabel.textColor = Colors.gray112
         self.dateLabel.text = model.date
         self.dateLabel.font = Fonts.ultraLight(size: 9)
+        
+        if model.isMyComment {
+            self.deleteFeedbackButton.tag = model.id
+            self.deleteFeedbackButton.isHidden = false
+            self.deleteFeedbackButton.addTarget(self, action: #selector(deleteFeedback(_:)), for: .touchUpInside)
+            self.usernameLabel.text = "\(model.userName) (это Вы)"
+        }
+        else {
+            self.deleteFeedbackButton.isHidden = true
+        }
+    }
+}
+
+//MARK:Actions
+extension CommentCell {
+    @objc func deleteFeedback(_ sender: UIButton) {
+        self.deleteFeedbackAtIdObserver.send(value: sender.tag)
     }
 }

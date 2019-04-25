@@ -20,10 +20,10 @@ class DetailHotelViewModel {
     var (lifetime, token) = Lifetime.make()
     enum CellType {
         case carouselGalleryCell([String])
-        case hotelRatingCell(String, Float)
+        case hotelRatingCell(String, Float?)
         case descriptionCell(String)
         case apartmentCell(MDApartmentType,[String], Float)
-        case commentCell(String, String, Float, String)
+        case commentCell(MDFeedback)
         case postFeedbackCell
     }
 
@@ -65,10 +65,31 @@ class DetailHotelViewModel {
     
     var insertAtIndexPaths: Signal<[IndexPath], NoError>
     fileprivate var insertAtIndexPathsObserver: Signal<[IndexPath], NoError>.Observer
-
-    var postCommentLoading: Property<Bool>
-    fileprivate var _postCommentLoading: MutableProperty<Bool>
     
+    var removeAtIndexPaths: Signal<[IndexPath], NoError>
+    fileprivate var removeAtIndexPathsObserver: Signal<[IndexPath], NoError>.Observer
+    
+    init(model: MDHotel, provider: MoyaProvider<Network> = MoyaProvider<Network>()) {
+        (setImages, setImagesObserver) = Signal.pipe()
+        (reload, reloadObserver) = Signal.pipe()
+        (didLoadCommentsSignal, didLoadCommentsObserver) = Signal.pipe()
+        (didLoadApartmentsSignal, didLoadApartmentsObserver) = Signal.pipe()
+        (insertAtIndexPaths, insertAtIndexPathsObserver) = Signal.pipe()
+        (removeAtIndexPaths, removeAtIndexPathsObserver) = Signal.pipe()
+        _loading = MutableProperty<Bool>.init(false)
+        loading = Property<Bool>.init(_loading)
+        
+        self.hotel = model
+        self.provider = provider
+    }
+    
+    func preload() {
+        loadModel()
+    }
+}
+
+//MARK: Binding Targets
+extension DetailHotelViewModel {
     var apartmentsForHotelRequest: SignalProducer<[MDApartment], MoyaError> {
         return self.provider.request(.apartments(hotel.id))
             .map([MDApartment].self)
@@ -115,23 +136,11 @@ class DetailHotelViewModel {
         })
     }
     
-    init(model: MDHotel, provider: MoyaProvider<Network> = MoyaProvider<Network>()) {
-        (setImages, setImagesObserver) = Signal.pipe()
-        (reload, reloadObserver) = Signal.pipe()
-        (didLoadCommentsSignal, didLoadCommentsObserver) = Signal.pipe()
-        (didLoadApartmentsSignal, didLoadApartmentsObserver) = Signal.pipe()
-        (insertAtIndexPaths, insertAtIndexPathsObserver) = Signal.pipe()
-        _postCommentLoading = MutableProperty.init(false)
-        postCommentLoading = Property.init(_postCommentLoading)
-        _loading = MutableProperty<Bool>.init(false)
-        loading = Property<Bool>.init(_loading)
-        
-        self.hotel = model
-        self.provider = provider
-    }
-    
-    func preload() {
-        loadModel()
+    var deleteFeedback: BindingTarget<Int> {
+        return BindingTarget<Int>.init(lifetime: lifetime, action: {[weak self] (id) in
+            guard let sself = self else {return}
+            sself.deleteFeedback(id: id)
+        })
     }
 }
 
@@ -232,19 +241,37 @@ extension DetailHotelViewModel {
             .map(MDFeedback.self)
             .on(starting: {[weak self] in
                 guard let sself = self else {return}
-                sself._postCommentLoading.value = true
             })
             .on(value: {[weak self] value in
                 guard let sself = self else {return}
                 print(value)
                 let indexPaths = sself.insertFeedback(feedback: value)
                 sself.insertAtIndexPathsObserver.send(value: indexPaths)
-                sself._postCommentLoading.value = false
             })
             .on(failed: {[weak self] error in
                 guard let sself = self else {return}
                 print(error)
-                sself._postCommentLoading.value = false
+            }).start()
+    }
+    
+    fileprivate func deleteFeedback(id: Int) {
+        guard let feedback = self.feedbackForId(id) else {return}
+        self.provider.request(.deleteComment(hotel.id, feedback))
+        .map(MDResponse.self)
+            .on(starting: {[weak self] in
+                guard let sself = self else {return}
+            })
+            .on(value: {[weak self] value in
+                guard let sself = self else {return}
+                print(value)
+                if value.success {
+                    let indexPaths = sself.removeFeedback(feedBack: feedback)
+                    sself.removeAtIndexPathsObserver.send(value: indexPaths)
+                }
+            })
+            .on(failed: {[weak self] error in
+                guard let sself = self else {return}
+                print(error)
             }).start()
     }
 }
@@ -269,8 +296,7 @@ extension DetailHotelViewModel {
     
     fileprivate func getFeedbacks() -> [CellType] {
         guard var feedbacks = self.feedbacks?.map({ (feedback) -> CellType?  in
-            guard let date = feedback.date, let username = feedback.user?.username else {return nil}
-            return .commentCell(date, username, feedback.rating, feedback.comment)
+            return .commentCell(feedback)
         }).filter({ (cellType) -> Bool in
             return cellType != nil
         }).map({ (cellType) -> CellType in
@@ -299,7 +325,21 @@ extension DetailHotelViewModel {
         }
     }
     
-    func insertFeedback(feedback: MDFeedback) -> [IndexPath] {
+    fileprivate func feedbackForId(_ id: Int) -> MDFeedback? {
+        guard let feedbacks = self.feedbacks else {
+            return nil
+        }
+        
+        for feedback in feedbacks {
+            if feedback.id! == id {
+                return feedback
+            }
+        }
+        
+        return nil
+    }
+    
+    fileprivate func insertFeedback(feedback: MDFeedback) -> [IndexPath] {
         let section = self.cells.count - 1
         let oldCount = self.cells[section].count - 1
         self.feedbacks?.append(feedback)
@@ -311,6 +351,26 @@ extension DetailHotelViewModel {
             indexPaths.append(indexPath)
         }
         return indexPaths
+    }
+    
+    fileprivate func removeFeedback(feedBack: MDFeedback) -> [IndexPath] {
+        let section = self.cells.count - 1
+        let feedbackCells = self.cells[section]
+        
+        for (index,cell) in feedbackCells.enumerated() {
+            switch cell {
+            case .commentCell(let feedback):
+                if feedBack == feedback {
+                    self.cells[section].remove(at: index)
+                    let indexPath = IndexPath(row: index, section: section)
+                    return [indexPath]
+                }
+            default:
+                continue
+            }
+        }
+        
+        return []
     }
 }
 

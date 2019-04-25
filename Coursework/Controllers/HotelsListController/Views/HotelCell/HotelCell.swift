@@ -12,7 +12,7 @@ class HotelCell: UITableViewCell, ReusableView {
     struct Model {
         let imageUrl: String
         let name: String
-        let rating: Float
+        let rating: Float?
         let location: String
         let price: Float
         let description: String?
@@ -98,17 +98,24 @@ class HotelCell: UITableViewCell, ReusableView {
         self.hotemImageView.clipsToBounds = true
         
         self.hotelTitle.text = validModel.name
-        self.ratingTitle.text = String(validModel.rating)
-        print(validModel.rating)
-        switch validModel.rating {
-        case 0..<4.0:
-            self.ratingBounds.backgroundColor = UIColor.red
-        case 4.0 ..< 7.0:
-            self.ratingBounds.backgroundColor = UIColor.yellow
-        case 8.0 ... 10.0:
-            self.ratingBounds.backgroundColor = UIColor.green
-        default:
-            break
+        
+        if let rating = validModel.rating {
+            switch rating {
+            case 0..<4.0:
+                self.ratingBounds.backgroundColor = UIColor.red
+            case 4.0 ..< 7.0:
+                self.ratingBounds.backgroundColor = UIColor.yellow
+            case 8.0 ... 10.0:
+                self.ratingBounds.backgroundColor = UIColor.green
+            default:
+                break
+            }
+            let rate = Double(rating).floorTo(precision: 2)
+            self.ratingTitle.text = String(rate)
+        }
+        else
+        {
+            self.ratingTitle.text = ""
         }
         
         self.locationTitle.text = validModel.location

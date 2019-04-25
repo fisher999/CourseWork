@@ -9,7 +9,7 @@
 import Foundation
 
 public struct MDFeedback {
-    let id: Int?
+    var id: Int?
     let date: String?
     let rating: Float
     let user: MDUser?
@@ -40,6 +40,7 @@ extension MDFeedback: Codable {
         case rating
         case user
         case comment
+        case isYourComment
     }
     
     public init(from decoder: Decoder) throws {
@@ -55,9 +56,19 @@ extension MDFeedback: Codable {
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(id, forKey: .id)
         try container.encode(rating, forKey: .rating)
         try container.encode(comment, forKey: .comment)
     }
+    
+}
+
+//MARK: Equatable
+extension MDFeedback: Equatable {
+    public static func == (lhs: MDFeedback, rhs: MDFeedback) -> Bool {
+        return lhs.id == rhs.id
+    }
+    
     
 }
 

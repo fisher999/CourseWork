@@ -11,4 +11,5 @@ import Foundation
 struct MDUser: Codable {
     let id: Int
     let username: String
+    let isMyComment: Bool
 }

@@ -11,7 +11,7 @@ import UIKit
 class HotelRatingCell: UITableViewCell, CustomCellTypeModel, ReusableView, NibLoadableView {
     struct Model {
         let title: String
-        let rating: Float
+        let rating: Float?
     }
     
     //MARK: Outlets
@@ -50,19 +50,26 @@ extension HotelRatingCell {
         self.titleLabel.font = Fonts.mediumItalic(size: 15)
         self.titleLabel.textColor = UIColor.black.withAlphaComponent(0.5)
         
-        switch model.rating {
-        case 0..<4.0:
-            self.ratingView.backgroundColor = UIColor.red
-        case 4.0 ..< 7.0:
-            self.ratingView.backgroundColor = UIColor.yellow
-        case 8.0 ... 10.0:
-            self.ratingView.backgroundColor = UIColor.green
-        default:
-            break
+        if let rating = model.rating {
+            switch rating {
+            case 0..<4.0:
+                self.ratingView.backgroundColor = UIColor.red
+            case 4.0 ..< 7.0:
+                self.ratingView.backgroundColor = UIColor.yellow
+            case 8.0 ... 10.0:
+                self.ratingView.backgroundColor = UIColor.green
+            default:
+                break
+            }
+            let rate = Double(rating).floorTo(precision: 2)
+            self.ratingLabel.text = String(rate)
         }
+        else {
+            self.ratingLabel.text = ""
+        }
+        
         self.ratingView.setCircle()
         
-        self.ratingLabel.text = String(model.rating)
         self.ratingLabel.font = Fonts.demiBold(size: 13)
         self.ratingLabel.textColor = UIColor.black
         self.layoutIfNeeded()

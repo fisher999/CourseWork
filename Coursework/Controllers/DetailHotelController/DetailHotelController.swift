@@ -50,6 +50,19 @@ class DetailHotelController: UIViewController {
         })
     }
     
+    var removeCellAtIndexPaths: BindingTarget<[IndexPath]> {
+        return BindingTarget<[IndexPath]>.init(lifetime: lifetime, action: { [weak self] (indexPaths) in
+            guard let sself = self else {return}
+            print(indexPaths)
+            
+            DispatchQueue.main.async {
+                sself.tableView.beginUpdates()
+                sself.tableView.deleteRows(at: indexPaths, with: .fade)
+                sself.tableView.endUpdates()
+            }
+        })
+    }
+    
     init(viewModel: DetailHotelViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -87,6 +100,7 @@ class DetailHotelController: UIViewController {
         self.tableView.reactive.reloadData <~ viewModel.reload
         self.loading <~ viewModel.loading
         self.insertCellsAtIndexPaths <~ self.viewModel.insertAtIndexPaths
+        self.removeCellAtIndexPaths <~ self.viewModel.removeAtIndexPaths
     }
 }
 
@@ -135,6 +149,7 @@ extension DetailHotelController: UITableViewDataSource {
             case .commentCell:
                 let cell: CommentCell = tableView.dequeueReusableCell(for: indexPath)
                 cell.model = viewModel.cellForRow(at: indexPath)
+                viewModel.deleteFeedback <~ cell.deleteFeedbackAtIdSignal.throttle(3.0, on: QueueScheduler.main)
                 return cell
             case .postFeedbackCell:
                 let cell: PostFeedbackCell = tableView.dequeueReusableCell(for: indexPath)

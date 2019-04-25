@@ -68,13 +68,13 @@ extension CommentCell {
         self.ratingLabel.textColor = UIColor.black
         self.ratingLabel.text = String(model.rating)
         
-        self.cimmentLabel.textColor = UIColor.black.withAlphaComponent(0.7)
+        self.cimmentLabel.textColor = UIColor.black.withAlphaComponent(1)
         self.cimmentLabel.text = model.comment
-        self.cimmentLabel.font = Fonts.medium(size: 15)
+        self.cimmentLabel.font = Fonts.demiBold(size: 12)
         
-        self.usernameLabel.textColor = UIColor.black
+        self.usernameLabel.textColor = UIColor.black.withAlphaComponent(0.4)
         self.usernameLabel.text = model.userName
-        self.cimmentLabel.font = Fonts.demiBold(size: 14)
+        self.usernameLabel.font = Fonts.medium(size: 13)
         
         self.dateLabel.textColor = Colors.gray112
         self.dateLabel.text = model.date

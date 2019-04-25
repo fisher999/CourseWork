@@ -23,15 +23,10 @@ class RegisterViewModel {
     var provider: MoyaProvider<Network>
     
     //MARK: -Reactive
-    var loginSignal: BindingTarget<(String?, String?)> {
-        return BindingTarget<(String?, String?)>.init(lifetime: lifetime, action: {[weak self] (username, password) in
+    var loginSignal: BindingTarget<(String, String)> {
+        return BindingTarget<(String, String)>.init(lifetime: lifetime, action: {[weak self] (username, password) in
             guard let sself = self else {return}
-            if let name = username, !name.isEmpty, let pass = password, !pass.isEmpty {
-                sself.login(username: name, password: pass)
-            }
-            else {
-                sself.registerCompetedObserver.send(error: .emptyField)
-            }
+            sself.login(username: username, password: password)
         })
     }
     

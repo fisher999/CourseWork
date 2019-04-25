@@ -63,6 +63,12 @@ class DetailHotelViewModel {
     var setImages: Signal<[String], NoError>
     fileprivate  var setImagesObserver: Signal<[String], NoError>.Observer
     
+    var insertAtIndexPaths: Signal<[IndexPath], NoError>
+    fileprivate var insertAtIndexPathsObserver: Signal<[IndexPath], NoError>.Observer
+
+    var postCommentLoading: Property<Bool>
+    fileprivate var _postCommentLoading: MutableProperty<Bool>
+    
     var apartmentsForHotelRequest: SignalProducer<[MDApartment], MoyaError> {
         return self.provider.request(.apartments(hotel.id))
             .map([MDApartment].self)
@@ -90,8 +96,9 @@ class DetailHotelViewModel {
             .on(value: {[weak self] feedbacks in
                 guard let sself = self else {return}
                 sself.feedbacks = feedbacks
-                print(feedbacks)
+                print(feedbacks.count)
                 sself.didLoadCommentsObserver.send(value: ())
+                sself.reloadObserver.send(value: ())
             })
             .on(failed: {[weak self] error in
                 guard let sself = self else {return}
@@ -113,6 +120,9 @@ class DetailHotelViewModel {
         (reload, reloadObserver) = Signal.pipe()
         (didLoadCommentsSignal, didLoadCommentsObserver) = Signal.pipe()
         (didLoadApartmentsSignal, didLoadApartmentsObserver) = Signal.pipe()
+        (insertAtIndexPaths, insertAtIndexPathsObserver) = Signal.pipe()
+        _postCommentLoading = MutableProperty.init(false)
+        postCommentLoading = Property.init(_postCommentLoading)
         _loading = MutableProperty<Bool>.init(false)
         loading = Property<Bool>.init(_loading)
         
@@ -138,6 +148,8 @@ extension DetailHotelViewModel {
         
         let feedbacks = getFeedbacks()
         
+        print(feedbacks.count)
+        
         if let description = self.hotel.description {
             let descriptionCell: DetailHotelViewModel.CellType = .descriptionCell(description) 
             self.cells.append([carouselGalleryCell, hotelRatingCell, descriptionCell])
@@ -149,7 +161,8 @@ extension DetailHotelViewModel {
         self.cells.append(apartments)
         self.cells.append(feedbacks)
         
-        self.reloadObserver.send(value: ())
+        print(self.cells.count)
+        
     }
     
     fileprivate func loadModel() {
@@ -162,11 +175,13 @@ extension DetailHotelViewModel {
                 guard let sself = self else {return}
                 sself._loading.value = false
                 sself.reloadCells()
+                sself.reloadObserver.send(value: ())
             })
             .on(failed: {[weak self] error in
                 guard let sself = self else {return}
                 sself._loading.value = false
                 sself.reloadCells()
+                sself.reloadObserver.send(value: ())
             })
             .start()
     }
@@ -181,10 +196,6 @@ extension DetailHotelViewModel {
     }
     
     func numberOfRowsInSection(section: Int) -> Int {
-        if section == 2 {
-            print(self.cells[section].count)
-            
-        }
         return self.cells[section].count
     }
     
@@ -216,19 +227,24 @@ extension DetailHotelViewModel {
     }
     
     fileprivate func postFeedback(rating: Int, comment: String) {
-        let user = MDUser.init(id: 0, username: UserManager.shared.currentUser!.username)
         let feedback = MDFeedback.init(rating: Float(rating), comment: comment)
         self.provider.request(.postComment(self.hotel.id, feedback))
+            .map(MDFeedback.self)
             .on(starting: {[weak self] in
-                
+                guard let sself = self else {return}
+                sself._postCommentLoading.value = true
             })
             .on(value: {[weak self] value in
                 guard let sself = self else {return}
                 print(value)
-                sself.reloadCells()
+                let indexPaths = sself.insertFeedback(feedback: value)
+                sself.insertAtIndexPathsObserver.send(value: indexPaths)
+                sself._postCommentLoading.value = false
             })
             .on(failed: {[weak self] error in
+                guard let sself = self else {return}
                 print(error)
+                sself._postCommentLoading.value = false
             }).start()
     }
 }
@@ -272,6 +288,29 @@ extension DetailHotelViewModel {
         }) else {return []}
         
         return apartments
+    }
+    
+    fileprivate func addFeedback(feedback: MDFeedback) {
+        if var feedbacks = self.feedbacks {
+            feedbacks.append(feedback)
+        }
+        else {
+            self.feedbacks = [feedback]
+        }
+    }
+    
+    func insertFeedback(feedback: MDFeedback) -> [IndexPath] {
+        let section = self.cells.count - 1
+        let oldCount = self.cells[section].count - 1
+        self.feedbacks?.append(feedback)
+        self.reloadCells()
+        let newCount = self.cells[section].count - 1
+        var indexPaths: [IndexPath] = []
+        for row in oldCount ..< newCount {
+            let indexPath = IndexPath.init(row: row, section: section)
+            indexPaths.append(indexPath)
+        }
+        return indexPaths
     }
 }
 

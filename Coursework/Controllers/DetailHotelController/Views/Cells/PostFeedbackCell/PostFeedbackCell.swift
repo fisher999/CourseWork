@@ -129,11 +129,15 @@ extension PostFeedbackCell {
                 self.alertSignalObserver.send(value: ErrorAlert.init(title: title, message: message))
             }
         }
+        
         self.sendFeedbackAction.apply((self.currentRating, self.feedbackTextView.text, self.firstBeginEditing)).startWithResult {(result) in
             if let value = result.value {
                 self.feedbackSignalObserver.send(value: value)
+                self.feedbackTextView.text = "Оставьте здесь ваш комментарий ..."
+                self.firstBeginEditing = true
             }
         }
+
     }
 }
 

@@ -34,6 +34,22 @@ class DetailHotelController: UIViewController {
         })
     }
     
+    var insertCellsAtIndexPaths: BindingTarget<[IndexPath]> {
+        return BindingTarget<[IndexPath]>.init(lifetime: lifetime, action: {[weak self] (indexPaths) in
+            guard let sself = self else {return}
+            print(indexPaths)
+            DispatchQueue.main.async {
+                sself.tableView.beginUpdates()
+                sself.tableView.insertRows(at: indexPaths, with: .bottom)
+                sself.tableView.endUpdates()
+                
+                if let indexPath = indexPaths.last {
+                    sself.scrollToIndexPath(tableView: sself.tableView, indexPath)
+                }
+            }
+        })
+    }
+    
     init(viewModel: DetailHotelViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -63,13 +79,14 @@ class DetailHotelController: UIViewController {
         //self.tableView.isScrollEnabled = false
         self.tableView.estimatedRowHeight = 600
         self.tableView.rowHeight = UITableView.automaticDimension
-        self.tableView.separatorStyle = .singleLine
+        self.tableView.separatorStyle = .none
         viewModel.preload()
     }
     
     func bind() {
         self.tableView.reactive.reloadData <~ viewModel.reload
         self.loading <~ viewModel.loading
+        self.insertCellsAtIndexPaths <~ self.viewModel.insertAtIndexPaths
     }
 }
 
@@ -82,6 +99,7 @@ extension DetailHotelController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 2 {
             print(viewModel.numberOfRowsInSection(section: section))
+            
         }
         return viewModel.numberOfRowsInSection(section: section)
     }
@@ -121,23 +139,8 @@ extension DetailHotelController: UITableViewDataSource {
             case .postFeedbackCell:
                 let cell: PostFeedbackCell = tableView.dequeueReusableCell(for: indexPath)
                 self.inputs.append(cell.feedbackTextView)
-                //viewModel.postFeedback <~ cell.sendFeedbackProducer
-                viewModel.postFeedback <~ cell.feedbackSignal
+                viewModel.postFeedback <~ cell.feedbackSignal.throttle(3.0, on: QueueScheduler.main)
                 self.alertBinding <~ cell.alertSignal
-//                self.alertBinding <~ cell.sendFeedbackProducer.materialize().map({ (event) -> ErrorAlert? in
-//                    guard let error = event.error else {return nil}
-//                    switch error {
-//                    case .validateError(let title, let message):
-//                        return ErrorAlert.init(title: title, message: message)
-//                    }
-//                }).filterMap({ (error) -> ErrorAlert? in
-//                    if error.optional != nil {
-//                        return error.optional!
-//                    }
-//                    else {
-//                        return nil
-//                    }
-//                })
                 return cell
             default:
                 return UITableViewCell()
@@ -156,6 +159,16 @@ extension DetailHotelController: UITableViewDataSource {
 //MARK: UITableViewDelegate
 extension DetailHotelController: UITableViewDelegate {
     
+}
+
+//MARK: ScrollToIndexPath
+extension DetailHotelController {
+    func scrollToIndexPath(tableView: UITableView, _ indexPath: IndexPath) {
+        UIView.transition(with: tableView, duration: 0.3, options: UIView.AnimationOptions.curveEaseInOut, animations: {
+            let lastIndexPath = IndexPath.init(row: indexPath.row + 1, section: indexPath.section)
+            tableView.scrollToRow(at: lastIndexPath, at: UITableView.ScrollPosition.bottom, animated: false)
+        }, completion: nil)
+    }
 }
 
 //MARK: Keyboard handle

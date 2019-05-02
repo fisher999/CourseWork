@@ -10,7 +10,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Coursework/Controllers/DetailHotelController/DetailHotelController.swift"
-            timestampString = "577904672.630478"
+            timestampString = "578247406.090297"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "41"
@@ -58,7 +58,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Coursework/Controllers/DetailHotelController/DetailHotelController.swift"
-            timestampString = "577904672.633251"
+            timestampString = "578247406.093964"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "40"
@@ -79,8 +79,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "347"
             endingLineNumber = "347"
-            landmarkName = "insertFeedback(feedback:)"
-            landmarkType = "7">
+            landmarkName = "DetailHotelViewModel"
+            landmarkType = "21">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

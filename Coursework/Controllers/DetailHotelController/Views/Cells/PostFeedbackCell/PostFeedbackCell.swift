@@ -20,7 +20,6 @@ class PostFeedbackCell: UITableViewCell, CustomCellTypeModel, NibLoadableView, R
     var model: DetailHotelViewModel.CellType?
     
     var currentRating: Int?
-    var firstBeginEditing: Bool = true
     
     //MARK: Reactive
     var feedbackSignal: Signal<(Int, String), NoError>
@@ -29,15 +28,15 @@ class PostFeedbackCell: UITableViewCell, CustomCellTypeModel, NibLoadableView, R
     var alertSignal: Signal<ErrorAlert,NoError>
     fileprivate var alertSignalObserver: Signal<ErrorAlert,NoError>.Observer
     
-    private var sendFeedbackAction: Action<(Int?, String?, Bool), (Int,String), DetailHotelViewModel.DetailHotelError>
-    fileprivate let postButtonSignalProducerGenerator: (Int?, String?, Bool) -> SignalProducer<(Int, String), DetailHotelViewModel.DetailHotelError>  = { rating, comment, isFirstBeginEditing  in
+    private var sendFeedbackAction: Action<(Int?, String?), (Int,String), DetailHotelViewModel.DetailHotelError>
+    fileprivate let postButtonSignalProducerGenerator: (Int?, String?) -> SignalProducer<(Int, String), DetailHotelViewModel.DetailHotelError>  = { rating, comment  in
         return SignalProducer<(Int, String), DetailHotelViewModel.DetailHotelError> { (observer, lifetime) in
             guard let currentRating = rating else {
                 observer.send(error: .validateError("Вы не указали оценку", "Пожалуйста, выберите оценку"))
                 observer.sendCompleted()
                 return
             }
-            guard let comment = comment, !comment.isEmpty, !isFirstBeginEditing else {
+            guard let comment = comment, !comment.isEmpty else {
                 observer.send(error: .validateError("Вы не написали отзыв", "Пожалуйста, напишите отзыв"))
                 observer.sendCompleted()
                 return
@@ -48,14 +47,14 @@ class PostFeedbackCell: UITableViewCell, CustomCellTypeModel, NibLoadableView, R
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        sendFeedbackAction = Action<(Int?, String?, Bool), (Int,String), DetailHotelViewModel.DetailHotelError>.init(execute: postButtonSignalProducerGenerator)
+        sendFeedbackAction = Action<(Int?, String?), (Int,String), DetailHotelViewModel.DetailHotelError>.init(execute: postButtonSignalProducerGenerator)
         (feedbackSignal, feedbackSignalObserver) = Signal.pipe()
         (alertSignal, alertSignalObserver) = Signal.pipe()
         super.init(style: style, reuseIdentifier: reuseIdentifier)
     }
     
     required init?(coder aDecoder: NSCoder) {
-        sendFeedbackAction = Action<(Int?, String?, Bool), (Int,String), DetailHotelViewModel.DetailHotelError>.init(execute: postButtonSignalProducerGenerator)
+        sendFeedbackAction = Action<(Int?, String?), (Int,String), DetailHotelViewModel.DetailHotelError>.init(execute: postButtonSignalProducerGenerator)
         (feedbackSignal, feedbackSignalObserver) = Signal.pipe()
         (alertSignal, alertSignalObserver) = Signal.pipe()
         super.init(coder: aDecoder)
@@ -76,8 +75,7 @@ class PostFeedbackCell: UITableViewCell, CustomCellTypeModel, NibLoadableView, R
 //MARK: Setup
 extension PostFeedbackCell {
     func setup() {
-        self.feedbackTextView.delegate = self
-        self.feedbackTextView.text = "Оставьте здесь ваш комментарий ..."
+        self.feedbackTextView.text = ""
         self.feedbackTextView.textColor = UIColor.black.withAlphaComponent(0.6)
         self.feedbackTextView.font = Fonts.medium(size: 13)
         self.feedbackTextView.dropShadow()
@@ -130,22 +128,13 @@ extension PostFeedbackCell {
             }
         }
         
-        self.sendFeedbackAction.apply((self.currentRating, self.feedbackTextView.text, self.firstBeginEditing)).startWithResult {(result) in
+        self.sendFeedbackAction.apply((self.currentRating, self.feedbackTextView.text)).startWithResult {(result) in
             if let value = result.value {
                 self.feedbackSignalObserver.send(value: value)
-                self.feedbackTextView.text = "Оставьте здесь ваш комментарий ..."
-                self.firstBeginEditing = true
+                self.feedbackTextView.text = ""
             }
         }
 
     }
 }
 
-extension PostFeedbackCell: UITextViewDelegate {
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        if self.firstBeginEditing {
-            textView.text = ""
-            self.firstBeginEditing = false
-        }
-    }
-}

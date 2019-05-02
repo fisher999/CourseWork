@@ -26,6 +26,12 @@ class DetailHotelViewModel {
         case commentCell(MDFeedback)
         case postFeedbackCell
     }
+    
+    enum SectionType {
+        case hotelInformation(CellType: [CellType])
+        case hotelApartment(CellType: [CellType])
+        case comment(CellType: [CellType])
+    }
 
     //MARK: Properties
     var hotel: MDHotel
@@ -140,6 +146,12 @@ extension DetailHotelViewModel {
         return BindingTarget<Int>.init(lifetime: lifetime, action: {[weak self] (id) in
             guard let sself = self else {return}
             sself.deleteFeedback(id: id)
+        })
+    }
+    
+    var didSelectAtIndexPath: BindingTarget<IndexPath> {
+        return BindingTarget<IndexPath>.init(lifetime: lifetime, action: {[weak self] (indexPath) in
+            guard let sself = self, indexPath.section == 1
         })
     }
 }

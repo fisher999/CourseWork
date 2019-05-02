@@ -18,3 +18,19 @@ struct MDConditions: Decodable {
     let bar: Bool
     let gym: Bool
 }
+
+extension MDConditions {
+    func dictRepresent() -> [String: Bool] {
+        var dict: [String: Bool] = [:]
+        dict["Wi-fi"] = self.wifi
+        dict["Бассейн"] = self.pool
+        dict["SPA"] = self.spa
+        dict["Домашние животные"] = self.allowedPets
+        dict["Кондиционер"] = self.conditioner
+        dict["Ресторан"] = self.restaraunt
+        dict["Бар"] = self.bar
+        dict["Тренажерный зал"] = self.gym
+        
+        return dict
+    }
+}

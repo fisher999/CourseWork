@@ -14,6 +14,10 @@ class Colors {
         return UIColor(r: 55, g: 167, b: 184)
     }()
     
+    static let disabled: UIColor = {
+        return UIColor(r: 204, g: 204, b: 204)
+    }()
+    
     static let red: UIColor = {
         return UIColor(r: 211, g: 47, b: 47)
     }()

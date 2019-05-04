@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ReactiveSwift
 
 class ConditionsView: UIView {
     //MARK: Outlets
@@ -20,12 +21,20 @@ class ConditionsView: UIView {
         }
     }
     
+    //MARK: Reactive
+    var collectionViewHeight: Property<CGFloat>
+    fileprivate var _collectionViewHeight: MutableProperty<CGFloat>
+    
     override init(frame: CGRect) {
+        _collectionViewHeight = MutableProperty<CGFloat>.init(0)
+        collectionViewHeight = Property<CGFloat>.init(_collectionViewHeight)
         super.init(frame: frame)
         view = loadFromNib()
     }
     
     required init?(coder aDecoder: NSCoder) {
+        _collectionViewHeight = MutableProperty<CGFloat>.init(0)
+        collectionViewHeight = Property<CGFloat>.init(_collectionViewHeight)
         super.init(coder: aDecoder)
         view = loadFromNib()
     }
@@ -33,6 +42,7 @@ class ConditionsView: UIView {
     override func awakeFromNib() {
         super.awakeFromNib()
         setup()
+        observeCollectionViewHeight()
     }
 }
 
@@ -42,6 +52,15 @@ extension ConditionsView {
         
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
+        self.collectionView.isScrollEnabled = false
+    }
+    
+    func observeCollectionViewHeight() {
+        self.collectionView.reactive.signal(forKeyPath: "contentSize").observeValues {[weak self] (value) in
+            guard let sself = self else {return}
+            guard let contentSize = value as? CGSize else {return}
+            sself._collectionViewHeight.value = contentSize.height
+        }
     }
 }
 
@@ -61,6 +80,12 @@ extension ConditionsView: UICollectionViewDataSource {
 }
 
 //MARK: UICollectionViewDelegate
-extension ConditionsView: UICollectionViewDelegate {
+extension ConditionsView: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: self.view.width / 2, height: 75)
+    }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
 }

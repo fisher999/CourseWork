@@ -35,7 +35,7 @@ class ConditionCell: UICollectionViewCell, ReusableView, NibLoadableView {
 extension ConditionCell {
     func setup(model: Model) {
         self.titleLabel.text = model.title
-        self.titleLabel.font = Fonts.mediumItalic(size: 13)
+        self.titleLabel.font = Fonts.ultraLight(size: 11)
         self.titleLabel.textColor = model.textColor
         
         self.iconView.image = UIImage(named: model.iconName)

@@ -21,6 +21,9 @@ class DetailHotelController: UIViewController {
     var inputs: [UIView] = []
     
     //MARK: Reactive
+    var didSelectSignal: Signal<IndexPath, NoError>
+    fileprivate var didSelectObserver: Signal<IndexPath, NoError>.Observer
+    
     var loading: BindingTarget<Bool> {
         return BindingTarget<Bool>.init(lifetime: lifetime, action: { (loading) in
             
@@ -63,8 +66,15 @@ class DetailHotelController: UIViewController {
         })
     }
     
+    var push: BindingTarget<UIViewController> {
+        return BindingTarget<UIViewController>.init(lifetime: lifetime, action: {[weak self] (vc) in
+            self?.navigationController?.pushViewController(vc, animated: true)
+        })
+    }
+    
     init(viewModel: DetailHotelViewModel) {
         self.viewModel = viewModel
+        (didSelectSignal, didSelectObserver) = Signal.pipe()
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -101,6 +111,8 @@ class DetailHotelController: UIViewController {
         self.loading <~ viewModel.loading
         self.insertCellsAtIndexPaths <~ self.viewModel.insertAtIndexPaths
         self.removeCellAtIndexPaths <~ self.viewModel.removeAtIndexPaths
+        self.push <~ self.viewModel.push
+        viewModel.didSelectAtIndexPath <~ self.didSelectSignal
     }
 }
 
@@ -173,7 +185,9 @@ extension DetailHotelController: UITableViewDataSource {
 
 //MARK: UITableViewDelegate
 extension DetailHotelController: UITableViewDelegate {
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        didSelectObserver.send(value: indexPath)
+    }
 }
 
 //MARK: ScrollToIndexPath

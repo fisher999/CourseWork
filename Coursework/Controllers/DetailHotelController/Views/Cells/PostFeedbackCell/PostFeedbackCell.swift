@@ -82,7 +82,6 @@ extension PostFeedbackCell {
         
         self.sendFeedbackButton.setTitle("Отправить отзыв", for: .normal)
         self.sendFeedbackButton.setTitleColor(UIColor.white, for: .normal)
-        self.sendFeedbackButton.setTitleColor(UIColor.white, for: .normal)
         self.sendFeedbackButton.titleLabel?.font = Fonts.ultraLight(size: 13)
         self.sendFeedbackButton.tintColor = UIColor.white
         self.sendFeedbackButton.backgroundColor = Colors.defaultColor

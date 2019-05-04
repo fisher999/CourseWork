@@ -75,6 +75,9 @@ class DetailHotelViewModel {
     var removeAtIndexPaths: Signal<[IndexPath], NoError>
     fileprivate var removeAtIndexPathsObserver: Signal<[IndexPath], NoError>.Observer
     
+    var push: Signal<UIViewController, NoError>
+    fileprivate var pushObserver: Signal<UIViewController, NoError>.Observer
+    
     init(model: MDHotel, provider: MoyaProvider<Network> = MoyaProvider<Network>()) {
         (setImages, setImagesObserver) = Signal.pipe()
         (reload, reloadObserver) = Signal.pipe()
@@ -82,6 +85,7 @@ class DetailHotelViewModel {
         (didLoadApartmentsSignal, didLoadApartmentsObserver) = Signal.pipe()
         (insertAtIndexPaths, insertAtIndexPathsObserver) = Signal.pipe()
         (removeAtIndexPaths, removeAtIndexPathsObserver) = Signal.pipe()
+        (push, pushObserver) = Signal.pipe()
         _loading = MutableProperty<Bool>.init(false)
         loading = Property<Bool>.init(_loading)
         
@@ -151,7 +155,17 @@ extension DetailHotelViewModel {
     
     var didSelectAtIndexPath: BindingTarget<IndexPath> {
         return BindingTarget<IndexPath>.init(lifetime: lifetime, action: {[weak self] (indexPath) in
-            guard let sself = self, indexPath.section == 1
+            guard let sself = self else {return}
+            switch sself.cells[indexPath.section][indexPath.row] {
+            case .apartmentCell:
+                guard let apartments = sself.apartments, indexPath.row < apartments.count else {return}
+                let apartment = apartments[indexPath.row]
+                let viewModel = DetailApartmentViewModel(apartment: apartment)
+                let vc = DetailApartmentController(viewModel: viewModel)
+                sself.pushObserver.send(value: vc)
+            default:
+                return
+            }
         })
     }
 }

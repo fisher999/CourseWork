@@ -20,17 +20,19 @@ struct MDConditions: Decodable {
 }
 
 extension MDConditions {
-    func dictRepresent() -> [String: Bool] {
-        var dict: [String: Bool] = [:]
-        dict["Wi-fi"] = self.wifi
-        dict["Бассейн"] = self.pool
-        dict["SPA"] = self.spa
-        dict["Домашние животные"] = self.allowedPets
-        dict["Кондиционер"] = self.conditioner
-        dict["Ресторан"] = self.restaraunt
-        dict["Бар"] = self.bar
-        dict["Тренажерный зал"] = self.gym
+    func arrayRepresent() -> [Condition] {
+        var array: [Condition] = []
+        let elementaryString = "conditions-"
         
-        return dict
+        array.append(Condition.init(title: "WIFI", icon: elementaryString.appending("wifi"), enabled: self.wifi))
+        array.append(Condition.init(title: "Бассейн", icon: elementaryString.appending("pool"), enabled: self.pool))
+        array.append(Condition.init(title: "SPA", icon: elementaryString.appending("spa"), enabled: self.spa))
+        array.append(Condition.init(title: "Домашние животные", icon: elementaryString.appending("pets"), enabled: self.allowedPets))
+        array.append(Condition.init(title: "Кондиционер", icon: elementaryString.appending("conditioner"), enabled: self.conditioner))
+        array.append(Condition.init(title: "Ресторан", icon: elementaryString.appending("restaraunt"), enabled: self.restaraunt))
+        array.append(Condition.init(title: "Бар", icon: elementaryString.appending("bar"), enabled: self.bar))
+        array.append(Condition.init(title: "Тренажерный зал", icon: elementaryString.appending("bar"), enabled: self.gym))
+        
+        return array
     }
 }

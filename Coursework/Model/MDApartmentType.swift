@@ -19,12 +19,14 @@ enum ApartmentType: String {
 struct MDApartmentType {
     let type: ApartmentType
     let numberOfRooms: Int
+    let maxPersons: Int
 }
 
 extension MDApartmentType: Decodable {
     enum CodingKeys: String, CodingKey {
         case name
         case numberOfRooms
+        case maxPersons
     }
     
     init(from decoder: Decoder) throws {
@@ -43,6 +45,10 @@ extension MDApartmentType: Decodable {
             fatalError()
         }
         
-        self.init(type: apartmentType, numberOfRooms: numberOfRooms)
+        guard let maxPersons = try container.decodeIfPresent(Int.self, forKey: .maxPersons) else {
+            fatalError()
+        }
+        
+        self.init(type: apartmentType, numberOfRooms: numberOfRooms, maxPersons: maxPersons)
     }
 }

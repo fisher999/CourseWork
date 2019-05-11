@@ -27,7 +27,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let viewModel = HotelsListViewModel()
             let hotelListVC = HotelsListController(viewModel: viewModel)
             let navVC = UINavigationController(rootViewController: hotelListVC)
-            self.window?.rootViewController = navVC
+            navVC.tabBarItem = UITabBarItem(title: "Бронирование", image: UIImage(named: "tabbar-booking")?.resizeImage(targetSize: CGSize(width: 22, height: 22)), tag: 0)
+            
+            let tabBarController = UITabBarController(nibName: nil, bundle: nil)
+            tabBarController.viewControllers = [navVC]
+            
+            self.window?.rootViewController = tabBarController
         }
         
         self.window?.makeKeyAndVisible()

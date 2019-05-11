@@ -98,7 +98,7 @@ class DetailHotelViewModel {
     }
 }
 
-//MARK: Binding Targets
+//MARK: Requests
 extension DetailHotelViewModel {
     var apartmentsForHotelRequest: SignalProducer<[MDApartment], MoyaError> {
         return self.provider.request(.apartments(hotel.id))
@@ -138,7 +138,10 @@ extension DetailHotelViewModel {
                 
             })
     }
-    
+}
+
+//MARK: Binding Targets
+extension DetailHotelViewModel {
     var postFeedback: BindingTarget<(Int, String)> {
         return BindingTarget<(Int, String)>.init(lifetime: lifetime, action: {[weak self] (rating, comment) in
             guard let sself = self else {return}

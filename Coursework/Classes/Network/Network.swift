@@ -18,6 +18,8 @@ public enum Network {
     case getComments(Int)
     case postComment(Int, MDFeedback)
     case deleteComment(Int, MDFeedback)
+    case makeBooking(MDBooking)
+    case bookingList
 }
 
 extension Network: TargetType {
@@ -35,14 +37,18 @@ extension Network: TargetType {
             return "/hotels/\(id)/apartments"
         case .getComments(let id), .postComment(let id, _), .deleteComment(let id, _):
             return "/hotels/\(id)/feedbacks"
+        case .makeBooking:
+            return "/booking"
+        case .bookingList:
+            return "/user/booking"
         }
     }
     
     public var method: Alamofire.HTTPMethod {
         switch self {
-        case .login, .postComment:
+        case .login, .postComment, .makeBooking:
             return .post
-        case .hotelist, .apartments, .getComments:
+        case .hotelist, .apartments, .getComments, .bookingList:
             return .get
         case .deleteComment:
             return .delete
@@ -57,10 +63,12 @@ extension Network: TargetType {
         switch self {
         case .login(let user):
             return .requestJSONEncodable(user)
-        case .hotelist, .apartments, .getComments:
+        case .hotelist, .apartments, .getComments, .bookingList:
             return .requestPlain
         case .postComment(_, let feedback), .deleteComment(_, let feedback):
             return .requestJSONEncodable(feedback)
+        case .makeBooking(let booking):
+            return .requestJSONEncodable(booking)
         
         }
     }

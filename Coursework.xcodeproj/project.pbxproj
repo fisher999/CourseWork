@@ -13,6 +13,8 @@
 		570F88CE227D82FC00C1599D /* BookingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570F88CD227D82FC00C1599D /* BookingViewModel.swift */; };
 		570F88D1227D831A00C1599D /* BookingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570F88CF227D831A00C1599D /* BookingController.swift */; };
 		570F88D2227D831A00C1599D /* BookingController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 570F88D0227D831A00C1599D /* BookingController.xib */; };
+		570F88D9227DE42300C1599D /* MDBooking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570F88D8227DE42300C1599D /* MDBooking.swift */; };
+		570F88DB227DEEE000C1599D /* String+Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 570F88DA227DEEE000C1599D /* String+Date.swift */; };
 		57109979225CF34500D6EB17 /* HotelsListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57109977225CF34500D6EB17 /* HotelsListController.swift */; };
 		5710997A225CF34500D6EB17 /* HotelsListController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 57109978225CF34500D6EB17 /* HotelsListController.xib */; };
 		5710997C225CF98600D6EB17 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5710997B225CF98600D6EB17 /* UserManager.swift */; };
@@ -37,6 +39,10 @@
 		57308EBF226C70B700707E9A /* UIView+Shadow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57308EBE226C70B700707E9A /* UIView+Shadow.swift */; };
 		57308EC1226C79C700707E9A /* UIButton+State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57308EC0226C79C700707E9A /* UIButton+State.swift */; };
 		5739D6AE2259ECB2005BF92E /* ErrorAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5739D6AD2259ECB2005BF92E /* ErrorAlert.swift */; };
+		573C6E59228408780007DDC9 /* BookingCompletedController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 573C6E57228408780007DDC9 /* BookingCompletedController.swift */; };
+		573C6E5A228408780007DDC9 /* BookingCompletedController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 573C6E58228408780007DDC9 /* BookingCompletedController.xib */; };
+		573C6E5E228421920007DDC9 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 573C6E5C228421920007DDC9 /* TabBarController.swift */; };
+		573C6E5F228421920007DDC9 /* TabBarController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 573C6E5D228421920007DDC9 /* TabBarController.xib */; };
 		5785554F2268B41D0089220E /* MDFeedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5785554E2268B41D0089220E /* MDFeedback.swift */; };
 		578555512268B5520089220E /* MDUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578555502268B5520089220E /* MDUser.swift */; };
 		578555552268D5BF0089220E /* ApartmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 578555532268D5BF0089220E /* ApartmentCell.swift */; };
@@ -70,6 +76,7 @@
 		57B77B4622639F4D00B05308 /* DetailHotelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57B77B4422639F4D00B05308 /* DetailHotelController.swift */; };
 		57B77B4722639F4D00B05308 /* DetailHotelController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 57B77B4522639F4D00B05308 /* DetailHotelController.xib */; };
 		57B77B4A22639FA600B05308 /* DetailHotelViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57B77B4922639FA600B05308 /* DetailHotelViewModel.swift */; };
+		57B8E8A4228327DE00DA8CEF /* Date+Adding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57B8E8A3228327DE00DA8CEF /* Date+Adding.swift */; };
 		57D4B7702264E839000C8594 /* MDApartment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57D4B76F2264E839000C8594 /* MDApartment.swift */; };
 		57D4B7722264E8C2000C8594 /* MDApartmentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57D4B7712264E8C2000C8594 /* MDApartmentType.swift */; };
 		57D4B7742264EEEB000C8594 /* MDConditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57D4B7732264EEEB000C8594 /* MDConditions.swift */; };
@@ -97,6 +104,8 @@
 		570F88CD227D82FC00C1599D /* BookingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingViewModel.swift; sourceTree = "<group>"; };
 		570F88CF227D831A00C1599D /* BookingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingController.swift; sourceTree = "<group>"; };
 		570F88D0227D831A00C1599D /* BookingController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BookingController.xib; sourceTree = "<group>"; };
+		570F88D8227DE42300C1599D /* MDBooking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDBooking.swift; sourceTree = "<group>"; };
+		570F88DA227DEEE000C1599D /* String+Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Date.swift"; sourceTree = "<group>"; };
 		57109977225CF34500D6EB17 /* HotelsListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotelsListController.swift; sourceTree = "<group>"; };
 		57109978225CF34500D6EB17 /* HotelsListController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HotelsListController.xib; sourceTree = "<group>"; };
 		5710997B225CF98600D6EB17 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
@@ -121,6 +130,10 @@
 		57308EBE226C70B700707E9A /* UIView+Shadow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Shadow.swift"; sourceTree = "<group>"; };
 		57308EC0226C79C700707E9A /* UIButton+State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+State.swift"; sourceTree = "<group>"; };
 		5739D6AD2259ECB2005BF92E /* ErrorAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorAlert.swift; sourceTree = "<group>"; };
+		573C6E57228408780007DDC9 /* BookingCompletedController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookingCompletedController.swift; sourceTree = "<group>"; };
+		573C6E58228408780007DDC9 /* BookingCompletedController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BookingCompletedController.xib; sourceTree = "<group>"; };
+		573C6E5C228421920007DDC9 /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
+		573C6E5D228421920007DDC9 /* TabBarController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TabBarController.xib; sourceTree = "<group>"; };
 		5785554E2268B41D0089220E /* MDFeedback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDFeedback.swift; sourceTree = "<group>"; };
 		578555502268B5520089220E /* MDUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDUser.swift; sourceTree = "<group>"; };
 		578555532268D5BF0089220E /* ApartmentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApartmentCell.swift; sourceTree = "<group>"; };
@@ -156,6 +169,7 @@
 		57B77B4422639F4D00B05308 /* DetailHotelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailHotelController.swift; sourceTree = "<group>"; };
 		57B77B4522639F4D00B05308 /* DetailHotelController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DetailHotelController.xib; sourceTree = "<group>"; };
 		57B77B4922639FA600B05308 /* DetailHotelViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailHotelViewModel.swift; sourceTree = "<group>"; };
+		57B8E8A3228327DE00DA8CEF /* Date+Adding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Adding.swift"; sourceTree = "<group>"; };
 		57D4B76F2264E839000C8594 /* MDApartment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDApartment.swift; sourceTree = "<group>"; };
 		57D4B7712264E8C2000C8594 /* MDApartmentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDApartmentType.swift; sourceTree = "<group>"; };
 		57D4B7732264EEEB000C8594 /* MDConditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDConditions.swift; sourceTree = "<group>"; };
@@ -191,6 +205,7 @@
 		570F88BA227B510700C1599D /* General */ = {
 			isa = PBXGroup;
 			children = (
+				573C6E5B2284216C0007DDC9 /* TabBarController */,
 				570F88BC227B512800C1599D /* BaseViewModel */,
 				570F88BB227B512100C1599D /* BaseController */,
 			);
@@ -235,16 +250,8 @@
 		570F88D3227D83A200C1599D /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				570F88D4227D83B000C1599D /* CalendarView */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		570F88D4227D83B000C1599D /* CalendarView */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = CalendarView;
 			sourceTree = "<group>";
 		};
 		57109973225CF2BE00D6EB17 /* HotelsListController */ = {
@@ -335,6 +342,24 @@
 				57308EBB226C663C00707E9A /* PostFeedbackCell.xib */,
 			);
 			path = PostFeedbackCell;
+			sourceTree = "<group>";
+		};
+		573C6E52228407630007DDC9 /* BookingCompletedController */ = {
+			isa = PBXGroup;
+			children = (
+				573C6E57228408780007DDC9 /* BookingCompletedController.swift */,
+				573C6E58228408780007DDC9 /* BookingCompletedController.xib */,
+			);
+			path = BookingCompletedController;
+			sourceTree = "<group>";
+		};
+		573C6E5B2284216C0007DDC9 /* TabBarController */ = {
+			isa = PBXGroup;
+			children = (
+				573C6E5C228421920007DDC9 /* TabBarController.swift */,
+				573C6E5D228421920007DDC9 /* TabBarController.xib */,
+			);
+			path = TabBarController;
 			sourceTree = "<group>";
 		};
 		578555522268D4520089220E /* ApartmentCell */ = {
@@ -457,6 +482,7 @@
 		57AF8C242259055B000616EA /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				573C6E52228407630007DDC9 /* BookingCompletedController */,
 				570F88CB227D82DF00C1599D /* BookingController */,
 				570F88BA227B510700C1599D /* General */,
 				578B90EE22775C1000F1D13F /* DetailApartmentController */,
@@ -482,6 +508,7 @@
 				578555502268B5520089220E /* MDUser.swift */,
 				579CE882227207C200AF7062 /* MDResponse.swift */,
 				570F88C9227B685800C1599D /* Condition.swift */,
+				570F88D8227DE42300C1599D /* MDBooking.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -504,6 +531,8 @@
 				57308EC0226C79C700707E9A /* UIButton+State.swift */,
 				579CE87F2271F70800AF7062 /* Float+Round.swift */,
 				578B90FC2277604500F1D13F /* UICollectionView+RegisterCell.swift */,
+				570F88DA227DEEE000C1599D /* String+Date.swift */,
+				57B8E8A3228327DE00DA8CEF /* Date+Adding.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -680,6 +709,7 @@
 				TargetAttributes = {
 					57AF8C0D2259053E000616EA = {
 						CreatedOnToolsVersion = 10.1;
+						LastSwiftMigration = 1010;
 					};
 				};
 			};
@@ -716,6 +746,7 @@
 				570F88D2227D831A00C1599D /* BookingController.xib in Resources */,
 				578B9102227760ED00F1D13F /* ConditionCell.xib in Resources */,
 				57B77B4722639F4D00B05308 /* DetailHotelController.xib in Resources */,
+				573C6E5F228421920007DDC9 /* TabBarController.xib in Resources */,
 				57EAABE82266D07400A69BD0 /* DescriptionCell.xib in Resources */,
 				578B90F822775F0200F1D13F /* ConditionsView.xib in Resources */,
 				57308EB8226C4F9800707E9A /* CarouselGalleryCell.xib in Resources */,
@@ -723,6 +754,7 @@
 				57308EBD226C663C00707E9A /* PostFeedbackCell.xib in Resources */,
 				57308EAC226C478800707E9A /* GalleryView.xib in Resources */,
 				57EAABEC2266D08600A69BD0 /* CommentCell.xib in Resources */,
+				573C6E5A228408780007DDC9 /* BookingCompletedController.xib in Resources */,
 				57AF8C2D2259077A000616EA /* RegisterViewController.xib in Resources */,
 				57FD1FFF2260F8430022C74B /* HotelCell.xib in Resources */,
 			);
@@ -742,6 +774,7 @@
 				"${PODS_ROOT}/Target Support Files/Pods-Coursework/Pods-Coursework-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/Cosmos/Cosmos.framework",
+				"${BUILT_PRODUCTS_DIR}/FSCalendar/FSCalendar.framework",
 				"${BUILT_PRODUCTS_DIR}/Moya/Moya.framework",
 				"${BUILT_PRODUCTS_DIR}/ReactiveCocoa/ReactiveCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/ReactiveSwift/ReactiveSwift.framework",
@@ -753,6 +786,7 @@
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Cosmos.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FSCalendar.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Moya.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactiveCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactiveSwift.framework",
@@ -793,6 +827,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				57308EB7226C4F9800707E9A /* CarouselGalleryCell.swift in Sources */,
+				570F88D9227DE42300C1599D /* MDBooking.swift in Sources */,
 				57AF8C3A225916CB000616EA /* Fonts.swift in Sources */,
 				570F88CA227B685800C1599D /* Condition.swift in Sources */,
 				5785554F2268B41D0089220E /* MDFeedback.swift in Sources */,
@@ -801,12 +836,14 @@
 				570F88CE227D82FC00C1599D /* BookingViewModel.swift in Sources */,
 				57AF8C36225911B3000616EA /* Colors.swift in Sources */,
 				57B77B4222636A6100B05308 /* UIImage+Resize.swift in Sources */,
+				573C6E59228408780007DDC9 /* BookingCompletedController.swift in Sources */,
 				5710997E225CFBC200D6EB17 /* String+base64.swift in Sources */,
 				57FD1FFE2260F8430022C74B /* HotelCell.swift in Sources */,
 				578B90F122775C3100F1D13F /* DetailApartmentViewModel.swift in Sources */,
 				57D4B7742264EEEB000C8594 /* MDConditions.swift in Sources */,
 				57EAABEB2266D08600A69BD0 /* CommentCell.swift in Sources */,
 				5739D6AE2259ECB2005BF92E /* ErrorAlert.swift in Sources */,
+				570F88DB227DEEE000C1599D /* String+Date.swift in Sources */,
 				578B90F422775C5600F1D13F /* DetailApartmentController.swift in Sources */,
 				570F88C0227B515200C1599D /* BaseViewModel.swift in Sources */,
 				578555552268D5BF0089220E /* ApartmentCell.swift in Sources */,
@@ -820,6 +857,7 @@
 				57308EAA226C477C00707E9A /* GalleryView.swift in Sources */,
 				57AF8C38225911EE000616EA /* UIColor + RGB.swift in Sources */,
 				57308EB2226C490100707E9A /* GalleryCell.swift in Sources */,
+				57B8E8A4228327DE00DA8CEF /* Date+Adding.swift in Sources */,
 				57FBBE95226AEED300218F8E /* DefaultAlamofireManager.swift in Sources */,
 				579CE8802271F70800AF7062 /* Float+Round.swift in Sources */,
 				579CE883227207C200AF7062 /* MDResponse.swift in Sources */,
@@ -841,6 +879,7 @@
 				57308EC1226C79C700707E9A /* UIButton+State.swift in Sources */,
 				57AF8C3F22591BAE000616EA /* User.swift in Sources */,
 				572EF7C3226F5B120069CD9E /* KeyboardNotificationHandler.swift in Sources */,
+				573C6E5E228421920007DDC9 /* TabBarController.swift in Sources */,
 				578B9101227760ED00F1D13F /* ConditionCell.swift in Sources */,
 				57FD2003226104710022C74B /* UITableView+Register.swift in Sources */,
 				57B77B4A22639FA600B05308 /* DetailHotelViewModel.swift in Sources */,
@@ -990,6 +1029,7 @@
 			baseConfigurationReference = 11A5C5E247C871DA2E2C458E /* Pods-Coursework.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = N28UYC6RTZ;
 				INFOPLIST_FILE = Coursework/Info.plist;
@@ -999,6 +1039,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = vsemenov.Coursework;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1009,6 +1051,7 @@
 			baseConfigurationReference = 679B2E8D1A18048E2391A075 /* Pods-Coursework.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = N28UYC6RTZ;
 				INFOPLIST_FILE = Coursework/Info.plist;
@@ -1018,6 +1061,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = vsemenov.Coursework;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

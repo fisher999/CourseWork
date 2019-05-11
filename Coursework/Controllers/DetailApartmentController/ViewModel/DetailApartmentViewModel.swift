@@ -8,6 +8,8 @@
 
 import Foundation
 import UIKit
+import ReactiveSwift
+import Result
 
 class DetailApartmentViewModel {
     //MARK: Properties
@@ -40,7 +42,12 @@ class DetailApartmentViewModel {
         return "\(Int(self.apartment.price))р."
     }
     
+    //MARK: Reactive
+    var push: Signal<UIViewController, NoError>
+    fileprivate var pushObserver: Signal<UIViewController, NoError>.Observer
+    
     init(apartment: MDApartment) {
+        (push, pushObserver) = Signal.pipe()
         self.apartment = apartment
     }
     
@@ -55,5 +62,11 @@ class DetailApartmentViewModel {
             }
         }
         return conditions
+    }
+    
+    func goToBooking() {
+        let viewModel = BookingViewModel(model: self.apartment)
+        let vc = BookingController(viewModel: viewModel)
+        self.pushObserver.send(value: vc)
     }
 }

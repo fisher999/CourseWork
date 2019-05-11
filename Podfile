@@ -11,4 +11,5 @@ target 'Coursework' do
 	pod 'ReactiveSwift'
 	pod 'ReactiveCocoa'
 	pod 'Cosmos'
+	pod 'FSCalendar'
 end

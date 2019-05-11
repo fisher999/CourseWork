@@ -1,6 +1,7 @@
 PODS:
   - Alamofire (4.8.2)
   - Cosmos (18.0.1)
+  - FSCalendar (2.8.0)
   - Moya/Core (12.0.1):
     - Alamofire (~> 4.1)
     - Result (~> 4.0)
@@ -16,6 +17,7 @@ PODS:
 DEPENDENCIES:
   - Alamofire
   - Cosmos
+  - FSCalendar
   - Moya/ReactiveSwift
   - ReactiveCocoa
   - ReactiveSwift
@@ -24,6 +26,7 @@ SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Alamofire
     - Cosmos
+    - FSCalendar
     - Moya
     - ReactiveCocoa
     - ReactiveSwift
@@ -32,11 +35,12 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   Alamofire: ae5c501addb7afdbb13687d7f2f722c78734c2d3
   Cosmos: 7dfaa3f52584ca5f94ab74b5c2e264019cc9f7f5
+  FSCalendar: 3a5ed3636e2ba1b83ebebfcf0c2603105a6f5efe
   Moya: cf730b3cd9e005401ef37a85143aa141a12fd38f
   ReactiveCocoa: fbd26e9ba60e98417ee47433e59465a98ed9da0f
   ReactiveSwift: a2bb9ace428a109e9c0209615645d9d286c8c433
   Result: bd966fac789cc6c1563440b348ab2598cc24d5c7
 
-PODFILE CHECKSUM: c92665575466ef609cc069f136bd20c6807c1707
+PODFILE CHECKSUM: 13ef5288d411687d090f1f9e0d4ffd0fca59f01e
 
 COCOAPODS: 1.6.1

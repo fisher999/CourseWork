@@ -65,12 +65,14 @@ extension DetailApartmentController {
         self.bookingButton.backgroundColor = Colors.defaultColor
         self.bookingButton.setBackgroundColor(color: Colors.defaultColor, forState: .selected)
         self.bookingButton.setCircle()
+        self.bookingButton.addTarget(self, action: #selector(goToBooking(_:)), for: .touchUpInside)
         
         self.conditionsView.model = viewModel.conditions()
     }
     
     func bind() {
         self.conditionsViewHeight <~ self.conditionsView.collectionViewHeight
+        self.push <~ viewModel.push
     }
 }
 
@@ -80,5 +82,18 @@ extension DetailApartmentController {
         return BindingTarget<CGFloat>.init(lifetime: lifetime, action: {[weak self] (height) in
             self?.collectionViewHeight.constant = height
         })
+    }
+    
+    var push: BindingTarget<UIViewController> {
+        return BindingTarget<UIViewController>.init(lifetime: lifetime, action: {[weak self] (vc) in
+            self?.navigationController?.pushViewController(vc, animated: true)
+        })
+    }
+}
+
+//MARK: Actions
+extension DetailApartmentController {
+    @objc func goToBooking(_ sender: UIButton) {
+        viewModel.goToBooking()
     }
 }

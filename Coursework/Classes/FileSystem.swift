@@ -7,3 +7,21 @@
 //
 
 import Foundation
+
+public class FileSystem {
+    static let documentsDirectory: URL = {
+        let urls = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return urls[urls.endIndex - 1]
+    }()
+    
+    static let cacheDirectory: URL = {
+        let urls = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
+        return urls[urls.endIndex - 1]
+    }()
+    
+    static let downloadDirectory: URL = {
+        let directory: URL = FileSystem.documentsDirectory.appendingPathComponent("/Download/")
+        return directory
+    }()
+    
+}

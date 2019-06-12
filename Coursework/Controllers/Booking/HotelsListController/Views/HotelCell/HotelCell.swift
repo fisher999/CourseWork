@@ -70,24 +70,17 @@ class HotelCell: UITableViewCell, ReusableView {
     func setup() {
         guard let validModel = self.model else {return}
         
-        let backroungGrayView = UIView(frame: CGRect(x: self.hotemImageView.x, y: self.hotemImageView.y, width: self.hotemImageView.width, height: self.hotemImageView.height))
-        backroungGrayView.cornerRadius = 5
-        backroungGrayView.clipsToBounds = true
-        
-        backroungGrayView.backgroundColor = UIColor.lightGray
-        backroungGrayView.layer.zPosition = 99
-        self.addSubview(backroungGrayView)
-        self.activityIndicator.isHidden = false
-        self.activityIndicator.startAnimating()
-        self.activityIndicator.layer.zPosition = 100
+//        self.activityIndicator.isHidden = false
+//        self.activityIndicator.startAnimating()
+//        self.activityIndicator.layer.zPosition = 100
         self.contentView.layoutSubviews()
         UIImage.downloadImageForUrl(url: validModel.imageUrl, succes: { [weak self](image, error) in
             guard let sself = self else {return}
             if let img = image {
                 sself.imageView?.image = img.crop(to: sself.hotemImageView.frame.size)
-                self?.activityIndicator.isHidden = true
-                self?.activityIndicator.stopAnimating()
-                backroungGrayView.removeFromSuperview()
+                sself.setNeedsLayout()
+//                self?.activityIndicator.isHidden = true
+//                self?.activityIndicator.stopAnimating()
             }
             
             if let err = error {
@@ -105,7 +98,7 @@ class HotelCell: UITableViewCell, ReusableView {
                 self.ratingBounds.backgroundColor = UIColor.red
             case 4.0 ..< 7.0:
                 self.ratingBounds.backgroundColor = UIColor.yellow
-            case 8.0 ... 10.0:
+            case 7.0 ... 10.0:
                 self.ratingBounds.backgroundColor = UIColor.green
             default:
                 break
@@ -115,15 +108,17 @@ class HotelCell: UITableViewCell, ReusableView {
         }
         else
         {
+            self.ratingBounds.backgroundColor = UIColor.white
             self.ratingTitle.text = ""
         }
         
         self.locationTitle.text = validModel.location
         self.priceTitle.text = String(Int(validModel.price)) + "р."
-        if validModel.description != nil {
+        
+        if validModel.description != nil && self.descriptionTitle != nil {
             self.descriptionTitle.text = validModel.description
         }
-        else {
+        else if self.descriptionTitle != nil {
             self.descriptionTitle.removeFromSuperview()
             self.contentView.addConstraint(NSLayoutConstraint(item: self.locationTitle, attribute: .bottom, relatedBy: .equal, toItem: self.contentView, attribute: .bottom, multiplier: 1.0, constant: -16))
         }

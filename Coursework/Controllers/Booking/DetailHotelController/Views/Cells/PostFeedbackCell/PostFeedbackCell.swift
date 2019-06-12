@@ -10,6 +10,11 @@ import UIKit
 import ReactiveSwift
 import Result
 
+protocol PostFeedbackCellDelegate: class {
+    func postFeedbackCell(sendFeedback rating: Int, comment: String)
+    func postFeedbackCell(sendAlert alert: ErrorAlert)
+}
+
 class PostFeedbackCell: UITableViewCell, CustomCellTypeModel, NibLoadableView, ReusableView {
     //MARK: Outlets
     @IBOutlet weak var feedbackTextView: UITextView!
@@ -18,16 +23,11 @@ class PostFeedbackCell: UITableViewCell, CustomCellTypeModel, NibLoadableView, R
     
     //MARK: Properties
     var model: DetailHotelViewModel.CellType?
+    var delegate: PostFeedbackCellDelegate?
     
     var currentRating: Int?
     
     //MARK: Reactive
-    var feedbackSignal: Signal<(Int, String), NoError>
-    fileprivate var feedbackSignalObserver: Signal<(Int, String), NoError>.Observer
-    
-    var alertSignal: Signal<ErrorAlert,NoError>
-    fileprivate var alertSignalObserver: Signal<ErrorAlert,NoError>.Observer
-    
     private var sendFeedbackAction: Action<(Int?, String?), (Int,String), DetailHotelViewModel.DetailHotelError>
     fileprivate let postButtonSignalProducerGenerator: (Int?, String?) -> SignalProducer<(Int, String), DetailHotelViewModel.DetailHotelError>  = { rating, comment  in
         return SignalProducer<(Int, String), DetailHotelViewModel.DetailHotelError> { (observer, lifetime) in
@@ -48,15 +48,11 @@ class PostFeedbackCell: UITableViewCell, CustomCellTypeModel, NibLoadableView, R
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         sendFeedbackAction = Action<(Int?, String?), (Int,String), DetailHotelViewModel.DetailHotelError>.init(execute: postButtonSignalProducerGenerator)
-        (feedbackSignal, feedbackSignalObserver) = Signal.pipe()
-        (alertSignal, alertSignalObserver) = Signal.pipe()
         super.init(style: style, reuseIdentifier: reuseIdentifier)
     }
     
     required init?(coder aDecoder: NSCoder) {
         sendFeedbackAction = Action<(Int?, String?), (Int,String), DetailHotelViewModel.DetailHotelError>.init(execute: postButtonSignalProducerGenerator)
-        (feedbackSignal, feedbackSignalObserver) = Signal.pipe()
-        (alertSignal, alertSignalObserver) = Signal.pipe()
         super.init(coder: aDecoder)
     }
     
@@ -116,21 +112,21 @@ extension PostFeedbackCell {
             button.isSelected = false
         }
         sender.isSelected = true
-        self.currentRating = sender.tag
+        self.currentRating = sender.tag + 1
     }
     
     @objc func postButtonTapped(_ sender: UIButton) {
-        self.sendFeedbackAction.errors.observeValues { (error) in
+        self.sendFeedbackAction.errors.observeValues {[weak self] (error) in
             switch error {
             case .validateError(let title, let message):
-                self.alertSignalObserver.send(value: ErrorAlert.init(title: title, message: message))
+                self?.delegate?.postFeedbackCell(sendAlert: ErrorAlert.init(title: title, message: message))
             }
         }
         
-        self.sendFeedbackAction.apply((self.currentRating, self.feedbackTextView.text)).startWithResult {(result) in
+        self.sendFeedbackAction.apply((self.currentRating, self.feedbackTextView.text)).startWithResult {[weak self] (result) in
             if let value = result.value {
-                self.feedbackSignalObserver.send(value: value)
-                self.feedbackTextView.text = ""
+                self?.delegate?.postFeedbackCell(sendFeedback: value.0, comment: value.1)
+                self?.feedbackTextView.text = ""
             }
         }
 

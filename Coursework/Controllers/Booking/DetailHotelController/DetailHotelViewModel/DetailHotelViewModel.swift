@@ -63,6 +63,9 @@ class DetailHotelViewModel {
     var reload: Signal<(), NoError>
     fileprivate var reloadObserver: Signal<(), NoError>.Observer
     
+    var updateCells: Signal<[IndexPath], NoError>
+    fileprivate var updateCellsObserver: Signal<[IndexPath], NoError>.Observer
+    
     var loading: Property<Bool>
     fileprivate var _loading: MutableProperty<Bool>
     
@@ -78,6 +81,9 @@ class DetailHotelViewModel {
     var push: Signal<UIViewController, NoError>
     fileprivate var pushObserver: Signal<UIViewController, NoError>.Observer
     
+    var errorAlert: Signal<ErrorAlert, NoError>
+    fileprivate var errorAlertObserver: Signal<ErrorAlert,NoError>.Observer
+    
     init(model: MDHotel, provider: MoyaProvider<Network> = MoyaProvider<Network>()) {
         (setImages, setImagesObserver) = Signal.pipe()
         (reload, reloadObserver) = Signal.pipe()
@@ -85,7 +91,9 @@ class DetailHotelViewModel {
         (didLoadApartmentsSignal, didLoadApartmentsObserver) = Signal.pipe()
         (insertAtIndexPaths, insertAtIndexPathsObserver) = Signal.pipe()
         (removeAtIndexPaths, removeAtIndexPathsObserver) = Signal.pipe()
+        (errorAlert, errorAlertObserver) = Signal.pipe()
         (push, pushObserver) = Signal.pipe()
+        (updateCells, updateCellsObserver) = Signal.pipe()
         _loading = MutableProperty<Bool>.init(false)
         loading = Property<Bool>.init(_loading)
         
@@ -118,6 +126,7 @@ extension DetailHotelViewModel {
                 guard let sself = self else {return}
                 sself._loading.value = false
                 print(error)
+                
             })
     }
     
@@ -140,22 +149,18 @@ extension DetailHotelViewModel {
     }
 }
 
+extension DetailHotelViewModel: PostFeedbackCellDelegate {
+    func postFeedbackCell(sendFeedback rating: Int, comment: String) {
+        self.postFeedback(rating: rating, comment: comment)
+    }
+    
+    func postFeedbackCell(sendAlert alert: ErrorAlert) {
+        self.errorAlertObserver.send(value: alert)
+    }
+}
+
 //MARK: Binding Targets
 extension DetailHotelViewModel {
-    var postFeedback: BindingTarget<(Int, String)> {
-        return BindingTarget<(Int, String)>.init(lifetime: lifetime, action: {[weak self] (rating, comment) in
-            guard let sself = self else {return}
-            sself.postFeedback(rating: rating, comment: comment)
-        })
-    }
-    
-    var deleteFeedback: BindingTarget<Int> {
-        return BindingTarget<Int>.init(lifetime: lifetime, action: {[weak self] (id) in
-            guard let sself = self else {return}
-            sself.deleteFeedback(id: id)
-        })
-    }
-    
     var didSelectAtIndexPath: BindingTarget<IndexPath> {
         return BindingTarget<IndexPath>.init(lifetime: lifetime, action: {[weak self] (indexPath) in
             guard let sself = self else {return}
@@ -198,8 +203,6 @@ extension DetailHotelViewModel {
         
         self.cells.append(apartments)
         self.cells.append(feedbacks)
-        
-        print(self.cells.count)
         
     }
     
@@ -273,9 +276,11 @@ extension DetailHotelViewModel {
             })
             .on(value: {[weak self] value in
                 guard let sself = self else {return}
-                print(value)
+                print(self?.feedbacks)
                 let indexPaths = sself.insertFeedback(feedback: value)
+                //sself.updateCellsObserver.send(value: sself.update())
                 sself.insertAtIndexPathsObserver.send(value: indexPaths)
+                print(self?.feedbacks?.count ?? 0)
             })
             .on(failed: {[weak self] error in
                 guard let sself = self else {return}
@@ -295,7 +300,9 @@ extension DetailHotelViewModel {
                 print(value)
                 if value.success {
                     let indexPaths = sself.removeFeedback(feedBack: feedback)
+                    //sself.updateCellsObserver.send(value: sself.update())
                     sself.removeAtIndexPathsObserver.send(value: indexPaths)
+                    print(self?.feedbacks?.count ?? 0)
                 }
             })
             .on(failed: {[weak self] error in
@@ -370,27 +377,25 @@ extension DetailHotelViewModel {
     
     fileprivate func insertFeedback(feedback: MDFeedback) -> [IndexPath] {
         let section = self.cells.count - 1
-        let oldCount = self.cells[section].count - 1
+        print(self.cells[section].count)
         self.feedbacks?.append(feedback)
         self.reloadCells()
-        let newCount = self.cells[section].count - 1
-        var indexPaths: [IndexPath] = []
-        for row in oldCount ..< newCount {
-            let indexPath = IndexPath.init(row: row, section: section)
-            indexPaths.append(indexPath)
-        }
-        return indexPaths
+        print(self.cells[section].count)
+        let row = self.cells[section].count - 2
+        let indexPath = IndexPath(row: row, section: section)
+        return [indexPath]
     }
     
     fileprivate func removeFeedback(feedBack: MDFeedback) -> [IndexPath] {
         let section = self.cells.count - 1
         let feedbackCells = self.cells[section]
-        
         for (index,cell) in feedbackCells.enumerated() {
             switch cell {
             case .commentCell(let feedback):
                 if feedBack == feedback {
-                    self.cells[section].remove(at: index)
+                    self.feedbacks?.remove(at: index)
+                    self.reloadCells()
+                    print(self.cells[section].count)
                     let indexPath = IndexPath(row: index, section: section)
                     return [indexPath]
                 }
@@ -400,6 +405,25 @@ extension DetailHotelViewModel {
         }
         
         return []
+    }
+    
+    func update() -> [IndexPath] {
+        let section = self.cells.count - 1
+        let feedbackCells = self.cells[section]
+        
+        var indexPaths: [IndexPath] = []
+        
+        for (index, feedback) in feedbackCells.enumerated() {
+            indexPaths.append(IndexPath.init(row: index, section: section))
+        }
+        
+        return indexPaths
+    }
+}
+
+extension DetailHotelViewModel: CommentCellDelegate {
+    func commentCell(deleteFeedbackAt id: Int) {
+        self.deleteFeedback(id: id)
     }
 }
 

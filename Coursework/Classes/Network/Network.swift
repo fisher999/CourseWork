@@ -13,26 +13,31 @@ import Alamofire
 
 public enum Network {
     case login(User)
-    case hotelist
+    case register(User)
+    case hotelistAtPage(Int)
     case apartments(Int)
     case getComments(Int)
     case postComment(Int, MDFeedback)
     case deleteComment(Int, MDFeedback)
     case makeBooking(MDBooking)
     case bookingList
+    case userApartments
+    case getBookingListCsv
 }
 
 extension Network: TargetType {
     public var baseURL: URL {
-        return URL(fileURLWithPath: "http://192.168.1.6:8000")
+        return URL(fileURLWithPath: AppDelegate.baseUrl)
     }
     
     public var path: String {
         switch self {
         case .login:
             return "/login/"
-        case .hotelist:
-            return "/hotels/"
+        case .register:
+            return "/register/"
+        case .hotelistAtPage(let page):
+            return "/hotels/\(page)"
         case .apartments(let id):
             return "/hotels/\(id)/apartments"
         case .getComments(let id), .postComment(let id, _), .deleteComment(let id, _):
@@ -41,14 +46,18 @@ extension Network: TargetType {
             return "/booking"
         case .bookingList:
             return "/user/booking"
+        case .userApartments:
+            return "/user/apartments"
+        case .getBookingListCsv:
+            return "/user/booking/csv"
         }
     }
     
     public var method: Alamofire.HTTPMethod {
         switch self {
-        case .login, .postComment, .makeBooking:
+        case .login, .postComment, .makeBooking, .register:
             return .post
-        case .hotelist, .apartments, .getComments, .bookingList:
+        case .hotelistAtPage, .apartments, .getComments, .bookingList, .userApartments, .getBookingListCsv:
             return .get
         case .deleteComment:
             return .delete
@@ -61,31 +70,30 @@ extension Network: TargetType {
     
     public var task: Task {
         switch self {
-        case .login(let user):
+        case .login(let user), .register(let user):
             return .requestJSONEncodable(user)
-        case .hotelist, .apartments, .getComments, .bookingList:
+        case .hotelistAtPage, .apartments, .getComments, .bookingList, .userApartments, .getBookingListCsv:
             return .requestPlain
         case .postComment(_, let feedback), .deleteComment(_, let feedback):
             return .requestJSONEncodable(feedback)
         case .makeBooking(let booking):
             return .requestJSONEncodable(booking)
-        
         }
     }
     
     public var headers: [String : String]? {
         //TODO
         switch self {
-        case .login(_):
+        case .login(_), .register:
             return nil
         default:
-            return addAuthorization(to: nil, user: UserManager.shared.currentUser)
+            return Network.addAuthorization(to: nil, user: UserManager.shared.currentUser)
         }
     }
 }
 
-private extension Network {
-    func addAuthorization(to headers: [String: String]?,user:User?) -> [String: String]? {
+extension Network {
+    static func addAuthorization(to headers: [String: String]?,user:User?) -> [String: String]? {
         guard let currentUser = user else {return nil}
         let username = currentUser.username
         let pass = currentUser.password
@@ -102,3 +110,4 @@ private extension Network {
         return temp
     }
 }
+

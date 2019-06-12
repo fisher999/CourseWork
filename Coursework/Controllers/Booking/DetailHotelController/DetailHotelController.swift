@@ -66,6 +66,17 @@ class DetailHotelController: UIViewController {
         })
     }
     
+    var updateCells: BindingTarget<[IndexPath]> {
+        return BindingTarget<[IndexPath]>.init(lifetime: lifetime, action: {[weak self] (indexPaths) in
+            guard let sself = self else {return}
+            DispatchQueue.main.async {
+                sself.tableView.beginUpdates()
+                sself.tableView.reloadRows(at: indexPaths, with: .none)
+                sself.tableView.endUpdates()
+            }
+        })
+    }
+    
     var push: BindingTarget<UIViewController> {
         return BindingTarget<UIViewController>.init(lifetime: lifetime, action: {[weak self] (vc) in
             self?.navigationController?.pushViewController(vc, animated: true)
@@ -113,6 +124,8 @@ class DetailHotelController: UIViewController {
         self.removeCellAtIndexPaths <~ self.viewModel.removeAtIndexPaths
         self.push <~ self.viewModel.push
         viewModel.didSelectAtIndexPath <~ self.didSelectSignal
+        self.alertBinding <~ viewModel.errorAlert
+        //self.updateCells <~ viewModel.updateCells
     }
 }
 
@@ -161,13 +174,12 @@ extension DetailHotelController: UITableViewDataSource {
             case .commentCell:
                 let cell: CommentCell = tableView.dequeueReusableCell(for: indexPath)
                 cell.model = viewModel.cellForRow(at: indexPath)
-                viewModel.deleteFeedback <~ cell.deleteFeedbackAtIdSignal.throttle(3.0, on: QueueScheduler.main)
+                cell.delegate = viewModel
                 return cell
             case .postFeedbackCell:
                 let cell: PostFeedbackCell = tableView.dequeueReusableCell(for: indexPath)
                 self.inputs.append(cell.feedbackTextView)
-                viewModel.postFeedback <~ cell.feedbackSignal.throttle(3.0, on: QueueScheduler.main)
-                self.alertBinding <~ cell.alertSignal
+                cell.delegate = viewModel
                 return cell
             default:
                 return UITableViewCell()

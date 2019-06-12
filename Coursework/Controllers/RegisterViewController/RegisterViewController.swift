@@ -38,6 +38,9 @@ class RegisterViewController: UIViewController {
     var loginSignal: Signal<(String, String), NoError>
     fileprivate var loginSignalObserver: Signal<(String, String), NoError>.Observer
     
+    var registerSignal: Signal<(String, String), NoError>
+    fileprivate var registerSignalObserver: Signal<(String, String), NoError>.Observer
+    
     private var loginButtonAction: Action<(String?, String?), (String,String), RegisterViewModel.RegisterError>
     fileprivate let loginButtonSignalProducerGenerator: (String?, String?) -> SignalProducer<(String, String), RegisterViewModel.RegisterError>  = { login, password  in
         return SignalProducer<(String, String), RegisterViewModel.RegisterError> { (observer, lifetime) in
@@ -79,6 +82,7 @@ class RegisterViewController: UIViewController {
         loginButtonAction = Action<(String?, String?), (String,String), RegisterViewModel.RegisterError>.init(execute: loginButtonSignalProducerGenerator)
         (alertSignal, alertSignalObserver) = Signal.pipe()
         (loginSignal, loginSignalObserver) = Signal.pipe()
+        (registerSignal, registerSignalObserver) = Signal.pipe()
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -131,6 +135,7 @@ class RegisterViewController: UIViewController {
         self.registerButton.border = Colors.defaultColor
         self.registerButton.borderWidth = 2
         self.registerButton.setCircle()
+        self.registerButton.addTarget(self, action: #selector(registerTapped(_:)), for: .touchUpInside)
     
         self.activityIndicator.isHidden = true
         
@@ -138,25 +143,19 @@ class RegisterViewController: UIViewController {
     }
     
     func bind() {
-        
         self.alertBinding <~ alertSignal
+        viewModel.registerSignal <~ self.registerSignal
         self.viewModel.loginSignal <~ self.loginSignal
-        
-        self.alertBinding <~ self.viewModel.didResponse.materialize().map({ (event) -> ErrorAlert? in
-            guard let error = event.error else {return nil}
+        self.alertBinding <~ viewModel.didResponseAction.errors.map({ (error) -> ErrorAlert in
             switch error {
             case .moyaError(let error):
                 return ErrorAlert(title: "Ошибка сервера", message: error.localizedDescription)
+            case .invalidPasswordOrUsername:
+                return ErrorAlert.init(title: "Ошибка авторизации", message: "Введен неправильный логин или пароль")
+            case .registerError(let errorString):
+                return ErrorAlert.init(title: "Ошибка регистрации", message: errorString)
             default:
-                return nil
-            }
-
-        }).filterMap({ (error) -> ErrorAlert? in
-            if error.optional != nil {
-                return error.optional!
-            }
-            else {
-                return nil
+                return ErrorAlert.init(title: "Ошибка", message: error.localizedDescription)
             }
         })
         
@@ -165,11 +164,7 @@ class RegisterViewController: UIViewController {
             return !loading
         })
         
-        self.didResponse <~ viewModel.didResponse.materialize().map({ (event) -> String? in
-        return event.value
-        }).filterMap({ (string) -> String? in
-            return string
-        })
+        self.didResponse <~ viewModel.didResponseAction.values
         
         self.pushVCBinding <~ viewModel.pushVC
         
@@ -180,6 +175,8 @@ class RegisterViewController: UIViewController {
                 sself.alertSignalObserver.send(value: ErrorAlert(title: "Поля пусты", message: "Пожалуйста заполните все поля"))
             case .moyaError(let error):
                 sself.alertSignalObserver.send(value: ErrorAlert.init(title: "Ошибка сервера", message: error.localizedDescription))
+            default:
+                return
             }
         }
     }
@@ -196,6 +193,16 @@ extension RegisterViewController {
 
             if let value = result.value {
                 sself.loginSignalObserver.send(value: value)
+            }
+        }
+    }
+    
+    @objc func registerTapped(_ sender: UIButton) {
+        self.loginButtonAction.apply((self.usernameTextField.text, self.passwordTextField.text)).startWithResult {[weak self] (result) in
+            guard let sself = self else {return}
+            
+            if let value = result.value {
+                sself.registerSignalObserver.send(value: value)
             }
         }
     }

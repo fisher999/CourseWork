@@ -56,6 +56,6 @@ class BookingCompletedController: BaseController {
 
 extension BookingCompletedController {
     @objc func dismissButtonTapped(_ sender: UIButton) {
-        
+        self.present(UITabBarController.instantinate(), animated: true, completion: nil)
     }
 }

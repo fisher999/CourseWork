@@ -8,17 +8,30 @@
 
 import UIKit
 
-class AccountListCell: UITableViewCell {
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+class AccountListCell: UITableViewCell, ReusableView, NibLoadableView  {
+    //MARK: Outlet
+    @IBOutlet weak var titleLabel: UILabel!
+    
+    //MARK: Properties
+    var model: AccountListController.Model? {
+        didSet {
+            guard let validModel = model else {return}
+            self.titleLabel.text = validModel.rawValue
+            switch validModel {
+            case .history:
+                self.titleLabel.textColor = UIColor.black
+            case .signOut:
+                self.titleLabel.textColor = Colors.red
+            }
+        }
     }
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        setup()
+    }
+
+    func setup() {
+        self.titleLabel.font = Fonts.demiBold(size: 13)
+    }
 }

@@ -10,6 +10,10 @@ import UIKit
 import ReactiveSwift
 import Result
 
+protocol CommentCellDelegate: class {
+    func commentCell(deleteFeedbackAt id: Int)
+}
+
 class CommentCell: UITableViewCell, CustomCellTypeModel, ReusableView, NibLoadableView {
     struct Model{
         let id: Int
@@ -43,17 +47,15 @@ class CommentCell: UITableViewCell, CustomCellTypeModel, ReusableView, NibLoadab
         }
     }
     
+    weak var delegate: CommentCellDelegate?
+    
     //MARK: Reactive
-    var deleteFeedbackAtIdSignal: Signal<Int, NoError>
-    fileprivate var deleteFeedbackAtIdObserver: Signal<Int, NoError>.Observer
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        (deleteFeedbackAtIdSignal, deleteFeedbackAtIdObserver) = Signal.pipe()
         super.init(style: style, reuseIdentifier: reuseIdentifier)
     }
     
     required init?(coder aDecoder: NSCoder) {
-        (deleteFeedbackAtIdSignal, deleteFeedbackAtIdObserver) = Signal.pipe()
         super.init(coder: aDecoder)
     }
     
@@ -115,6 +117,6 @@ extension CommentCell {
 //MARK:Actions
 extension CommentCell {
     @objc func deleteFeedback(_ sender: UIButton) {
-        self.deleteFeedbackAtIdObserver.send(value: sender.tag)
+        self.delegate?.commentCell(deleteFeedbackAt: sender.tag)
     }
 }

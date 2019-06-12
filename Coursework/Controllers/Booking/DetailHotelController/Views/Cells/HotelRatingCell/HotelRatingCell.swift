@@ -54,7 +54,7 @@ extension HotelRatingCell {
             switch rating {
             case 0..<4.0:
                 self.ratingView.backgroundColor = UIColor.red
-            case 4.0 ..< 7.0:
+            case 4.0 ..< 8.0:
                 self.ratingView.backgroundColor = UIColor.yellow
             case 8.0 ... 10.0:
                 self.ratingView.backgroundColor = UIColor.green
